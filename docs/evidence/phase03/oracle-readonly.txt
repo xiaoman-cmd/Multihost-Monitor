@@ -1,0 +1,101 @@
+UTC_TIME
+2026-10-27T10:52:12Z
+ARCHITECTURE
+x86_64
+KERNEL
+6.17.0-1020-oracle
+OS_RELEASE
+PRETTY_NAME="Ubuntu 24.04.5 LTS"
+NAME="Ubuntu"
+VERSION_ID="24.04"
+VERSION="24.04.5 LTS (Noble Numbat)"
+VERSION_CODENAME=noble
+ID=ubuntu
+ID_LIKE=debian
+HOME_URL="https://www.ubuntu.com/"
+SUPPORT_URL="https://help.ubuntu.com/"
+BUG_REPORT_URL="https://bugs.launchpad.net/ubuntu/"
+PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
+UBUNTU_CODENAME=noble
+LOGO=ubuntu-logo
+SYSTEMD
+systemd 255 (255.4-1ubuntu8.18)
+MEMORY_BYTES
+               total        used        free      shared  buff/cache   available
+Mem:      1000345600   532439040    88088576     4399104   561770496   467906560
+Swap:     2415910912   160731136  2255179776
+ROOT_DISK_BYTES
+Filesystem       1B-blocks       Used   Available Use% Mounted on
+/dev/sda1      47321268224 6734487552 40570003456  15% /
+ROOT_INODES
+Filesystem      Inodes  IUsed   IFree IUse% Mounted on
+/dev/sda1      5980160 147559 5832601    3% /
+RUNNING_SERVICES
+UNIT                                                       LOAD   ACTIVE SUB     DESCRIPTION
+caddy.service                                              loaded active running Caddy
+cron.service                                               loaded active running Regular background program processing daemon
+dbus.service                                               loaded active running D-Bus System Message Bus
+flashsend.service                                          loaded active running FlashSend signaling server (Node)
+getty@tty1.service                                         loaded active running Getty on tty1
+iscsid.service                                             loaded active running iSCSI initiator daemon (iscsid)
+orbit-foundry-api.service                                  loaded active running Orbit Foundry API (Node)
+polkit.service                                             loaded active running Authorization Manager
+rpcbind.service                                            loaded active running RPC bind portmap service
+rsyslog.service                                            loaded active running System Logging Service
+serial-getty@ttyS0.service                                 loaded active running Serial Getty on ttyS0
+snap.oracle-cloud-agent.oracle-cloud-agent-updater.service loaded active running Service for snap application oracle-cloud-agent.oracle-cloud-agent-updater
+snap.oracle-cloud-agent.oracle-cloud-agent.service         loaded active running Service for snap application oracle-cloud-agent.oracle-cloud-agent
+snapd.service                                              loaded active running Snap Daemon
+ssh.service                                                loaded active running OpenBSD Secure Shell server
+systemd-journald.service                                   loaded active running Journal Service
+systemd-logind.service                                     loaded active running User Login Management
+systemd-networkd.service                                   loaded active running Network Configuration
+systemd-resolved.service                                   loaded active running Network Name Resolution
+systemd-timesyncd.service                                  loaded active running Network Time Synchronization
+systemd-udevd.service                                      loaded active running Rule-based Manager for Device Events and Files
+turnserver.service                                         loaded active running FlashSend coturn TURN/STUN relay (Oracle 同机)
+user@1001.service                                          loaded active running User Manager for UID 1001
+
+Legend: LOAD   → Reflects whether the unit definition was properly loaded.
+        ACTIVE → The high-level unit activation state, i.e. generalization of SUB.
+        SUB    → The low-level unit activation state, values depend on unit type.
+
+23 loaded units listed.
+LISTENING_PORTS
+Netid State  Recv-Q Send-Q   Local Address:Port  Peer Address:PortProcess                                                      
+udp   UNCONN 0      0           127.0.0.54:53         0.0.0.0:*    users:(("systemd-resolve",pid=344060,fd=16))                
+udp   UNCONN 0      0        127.0.0.53%lo:53         0.0.0.0:*    users:(("systemd-resolve",pid=344060,fd=14))                
+udp   UNCONN 0      0      10.0.0.113%ens3:68         0.0.0.0:*    users:(("systemd-network",pid=344086,fd=22))                
+udp   UNCONN 0      0              0.0.0.0:111        0.0.0.0:*    users:(("rpcbind",pid=344040,fd=5),("systemd",pid=1,fd=218))
+udp   UNCONN 0      0              0.0.0.0:3478       0.0.0.0:*    users:(("turnserver",pid=361790,fd=21))                     
+udp   UNCONN 0      0              0.0.0.0:3478       0.0.0.0:*    users:(("turnserver",pid=361790,fd=20))                     
+udp   UNCONN 0      0                 [::]:111           [::]:*    users:(("rpcbind",pid=344040,fd=7),("systemd",pid=1,fd=220))
+udp   UNCONN 0      0                    *:443              *:*    users:(("caddy",pid=15517,fd=8))                            
+tcp   LISTEN 0      4096     127.0.0.53%lo:53         0.0.0.0:*    users:(("systemd-resolve",pid=344060,fd=15))                
+tcp   LISTEN 0      4096           0.0.0.0:111        0.0.0.0:*    users:(("rpcbind",pid=344040,fd=4),("systemd",pid=1,fd=217))
+tcp   LISTEN 0      511            0.0.0.0:8787       0.0.0.0:*    users:(("node",pid=223359,fd=18))                           
+tcp   LISTEN 0      4096         127.0.0.1:2019       0.0.0.0:*    users:(("caddy",pid=15517,fd=11))                           
+tcp   LISTEN 0      4096           0.0.0.0:22         0.0.0.0:*    users:(("sshd",pid=361794,fd=3),("systemd",pid=1,fd=120))   
+tcp   LISTEN 0      1024           0.0.0.0:3478       0.0.0.0:*    users:(("turnserver",pid=361790,fd=19))                     
+tcp   LISTEN 0      1024           0.0.0.0:3478       0.0.0.0:*    users:(("turnserver",pid=361790,fd=13))                     
+tcp   LISTEN 0      511          127.0.0.1:45125      0.0.0.0:*    users:(("node",pid=121839,fd=21))                           
+tcp   LISTEN 0      511          127.0.0.1:4180       0.0.0.0:*    users:(("node",pid=379417,fd=18))                           
+tcp   LISTEN 0      4096        127.0.0.54:53         0.0.0.0:*    users:(("systemd-resolve",pid=344060,fd=17))                
+tcp   LISTEN 0      4096              [::]:111           [::]:*    users:(("rpcbind",pid=344040,fd=6),("systemd",pid=1,fd=219))
+tcp   LISTEN 0      4096                 *:80               *:*    users:(("caddy",pid=15517,fd=13))                           
+tcp   LISTEN 0      4096              [::]:22            [::]:*    users:(("sshd",pid=361794,fd=4),("systemd",pid=1,fd=122))   
+tcp   LISTEN 0      4096                 *:443              *:*    users:(("caddy",pid=15517,fd=12))                           
+INSTALL_PERMISSIONS
+uid=1001(ubuntu) gid=1001(ubuntu) groups=1001(ubuntu),4(adm),24(cdrom),27(sudo),30(dip),105(lxd)
+
+User ubuntu may run the following commands on instance-20261002-1342:
+    (ALL : ALL) ALL
+    (ALL) NOPASSWD: ALL
+WIREGUARD_INTERFACE_NAMES
+wg tool not installed
+PYTHON
+Python 3.12.3
+TEST_DIRECTORY_COLLISIONS
+unused: /opt/multihost-monitor
+unused: /etc/multihost-monitor
+unused: /var/lib/multihost-monitor

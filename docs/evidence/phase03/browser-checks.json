@@ -1,0 +1,35 @@
+{
+  "date": "2026-10-27",
+  "method": "Codex in-app browser, actual loopback app and real local macOS Go Agent, disposable database",
+  "mobile": [
+    {
+      "viewport": 375,
+      "route": "#/",
+      "scrollWidth": 375
+    },
+    {
+      "viewport": 375,
+      "route": "#/manage",
+      "scrollWidth": 360
+    },
+    {
+      "viewport": 375,
+      "route": "#/hosts/1",
+      "scrollWidth": 360
+    }
+  ],
+  "desktop": {
+    "scrollWidth": 1280,
+    "viewport": 1280
+  },
+  "checks": [
+    "empty overview",
+    "create form (no secret captured)",
+    "real metrics overview and detail",
+    "disabled separate count; rejects agent upload",
+    "enabled without restart: offline and stale",
+    "7d range",
+    "management list"
+  ],
+  "consoleWarningsAndErrors": []
+}

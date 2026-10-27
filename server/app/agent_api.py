@@ -215,9 +215,12 @@ def install_routes(app, sessions, authenticated, same_origin):
         with sessions() as db:
             require_host(db, host_id)
             statement = select(AgentSample).where(AgentSample.host_id == host_id,
-                AgentSample.sampled_at >= since, AgentSample.sampled_at <= until)
+                AgentSample.sampled_at >= max(since, now() - 7 * 86400), AgentSample.sampled_at <= until)
             if before_id is not None:
                 statement = statement.where(AgentSample.id < before_id)
             rows = db.scalars(statement.order_by(AgentSample.id.desc()).limit(limit)).all()
             return {'items': [{'id': s.id, 'received_at': s.received_at, **s.payload} for s in rows],
                     'next_before_id': rows[-1].id if len(rows) == limit else None}
+
+    from .dashboard_api import install_dashboard_routes
+    install_dashboard_routes(app, sessions, authenticated, admin_write, write)

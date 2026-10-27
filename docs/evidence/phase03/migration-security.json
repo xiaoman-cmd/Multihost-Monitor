@@ -1,0 +1,24 @@
+{
+  "upgrade_head": "passed",
+  "alembic_check": "No new upgrade operations detected",
+  "server/migrations/versions/0001_phase01_phase_01_schema.py": {
+    "unchanged": true,
+    "sha256": "6049a1cf778d5fe7f3b44c94ad258a52577a5ecb88af4a3204ff732203a4de8d"
+  },
+  "all_prior_migrations_unchanged": true,
+  "ignored": [
+    ".env",
+    "data/monitor.db",
+    "data/monitor.db-wal",
+    "test.key",
+    "test.pem",
+    "test.token",
+    "agent/config.json",
+    "web/node_modules",
+    "web/dist"
+  ],
+  "server/migrations/versions/0002_phase02_agent_host_configuration_and_atomic_.py": {
+    "unchanged": true,
+    "sha256": "ec57ed6f5a6d1c5304e4a27a81b993aaf86bfb0c5b0e3cb347636020ad5de30d"
+  }
+}

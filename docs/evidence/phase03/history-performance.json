@@ -1,0 +1,42 @@
+{
+  "kind": "synthetic isolated SQLite + TestClient; no production data; no network/TLS",
+  "platform": "macOS-13.1-x86_64-i386-64bit",
+  "python": "3.12.13",
+  "rows": 20160,
+  "period_days": 7,
+  "interval_seconds": 30,
+  "query_runs": 10,
+  "bucket_seconds": 1800,
+  "points_returned": 337,
+  "samples_aggregated": 20160,
+  "response_bytes": 92793,
+  "query_ms_median": 374.26778848748654,
+  "query_ms_p95_nearest_rank": 413.58514898456633,
+  "query_ms_each": [
+    395.89449600316584,
+    364.2335489857942,
+    413.58514898456633,
+    378.54897300712764,
+    369.98660396784544,
+    399.80482403188944,
+    356.86634900048375,
+    352.34156996011734,
+    396.4557747822255,
+    357.1974060032517
+  ],
+  "cleanup_batch_ms": 57.86927486769855,
+  "cleanup_deleted": {
+    "agent_samples": 500,
+    "disk_metrics": 500,
+    "host_metrics": 500
+  },
+  "foreign_key_errors": 0,
+  "query_plan": [
+    [
+      3,
+      0,
+      46,
+      "SEARCH agent_samples USING COVERING INDEX sqlite_autoindex_agent_samples_2 (host_id=? AND sampled_at>?)"
+    ]
+  ]
+}

@@ -11,6 +11,8 @@ class Settings(BaseSettings):
     cookie_secure: bool = False
     session_hours: int = Field(default=8, ge=1, le=24)
 
+    retention_enabled: bool = True
+
     @model_validator(mode="after")
     def validate_config(self):
         if not self.database_url.startswith("sqlite:///"):

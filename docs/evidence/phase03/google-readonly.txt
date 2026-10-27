@@ -1,0 +1,87 @@
+UTC_TIME
+2026-10-27T10:52:16Z
+ARCHITECTURE
+x86_64
+KERNEL
+7.3.0-1003-gcp
+OS_RELEASE
+PRETTY_NAME="Ubuntu 26.10"
+NAME="Ubuntu"
+VERSION_ID="26.10"
+VERSION="26.10 (Stonking Stingray)"
+VERSION_CODENAME=stonking
+RELEASE_TYPE=stable
+ID=ubuntu
+ID_LIKE=debian
+HOME_URL="https://www.ubuntu.com/"
+DOCUMENTATION_URL="https://docs.ubuntu.com"
+SUPPORT_URL="https://help.ubuntu.com/"
+BUG_REPORT_URL="https://bugs.launchpad.net/ubuntu/"
+PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
+LOGO=ubuntu-logo
+VENDOR_NAME="Canonical"
+VENDOR_URL="https://canonical.com/"
+UBUNTU_CODENAME=stonking
+SYSTEMD
+systemd 261 (261.3-0ubuntu3)
+MEMORY_BYTES
+               total        used        free      shared  buff/cache   available
+Mem:       997470208   463466496   436834304     1048576   252977152   534003712
+Swap:              0           0           0
+ROOT_DISK_BYTES
+Filesystem       1B-blocks       Used   Available Use% Mounted on
+/dev/root      30009217024 2065338368 27927101440   7% /
+ROOT_INODES
+Filesystem      Inodes IUsed   IFree IUse% Mounted on
+/dev/root      3637760 64287 3573473    2% /
+RUNNING_SERVICES
+UNIT                                LOAD   ACTIVE SUB     DESCRIPTION
+chrony.service                      loaded active running chrony, an NTP client/server
+dbus-broker.service                 loaded active running D-Bus System Message Bus
+getty@tty1.service                  loaded active running Getty on tty1
+google-guest-agent-manager.service  loaded active running Google Compute Engine Guest Agent Plugin Manager
+google-guest-compat-manager.service loaded active running Google Compute Engine Guest Compat Manager
+google-osconfig-agent.service       loaded active running Google OSConfig Agent
+networkd-dispatcher.service         loaded active running Dispatcher daemon for systemd-networkd
+serial-getty@ttyS0.service          loaded active running Serial Getty on ttyS0
+server-monitor.service              loaded active running Lightweight server monitoring dashboard
+sing-box.service                    loaded active running sing-box service
+snapd.service                       loaded active running Snap Daemon
+ssh.service                         loaded active running OpenBSD Secure Shell server
+systemd-journald.service            loaded active running Journal Service
+systemd-logind.service              loaded active running User Login Management
+systemd-networkd.service            loaded active running Network Management
+systemd-resolved.service            loaded active running Network Name Resolution
+systemd-udevd.service               loaded active running Rule-based Manager for Device Events and Files
+unattended-upgrades.service         loaded active running Unattended Upgrades Shutdown
+user@1002.service                   loaded active running User Manager for UID 1002
+
+Legend: LOAD   → Reflects whether the unit definition was properly loaded.
+        ACTIVE → The high-level unit activation state, i.e. generalization of SUB.
+        SUB    → The low-level unit activation state, values depend on unit type.
+
+19 loaded units listed.
+LISTENING_PORTS
+Netid State  Recv-Q Send-Q Local Address:Port Peer Address:PortProcess
+udp   UNCONN 0      0          127.0.0.1:323       0.0.0.0:*    users:(("chronyd",pid=746,fd=4))
+udp   UNCONN 0      0         127.0.0.54:53        0.0.0.0:*    users:(("systemd-resolve",pid=163,fd=18))
+udp   UNCONN 0      0      127.0.0.53%lo:53        0.0.0.0:*    users:(("systemd-resolve",pid=163,fd=16))
+udp   UNCONN 0      0              [::1]:323          [::]:*    users:(("chronyd",pid=746,fd=5))
+tcp   LISTEN 0      4096      127.0.0.54:53        0.0.0.0:*    users:(("systemd-resolve",pid=163,fd=19))
+tcp   LISTEN 0      4096         0.0.0.0:443       0.0.0.0:*    users:(("sing-box",pid=9152,fd=7))
+tcp   LISTEN 0      4096         0.0.0.0:22        0.0.0.0:*    users:(("sshd",pid=1022,fd=3),("systemd",pid=1,fd=187))
+tcp   LISTEN 0      4096   127.0.0.53%lo:53        0.0.0.0:*    users:(("systemd-resolve",pid=163,fd=17))
+tcp   LISTEN 0      5            0.0.0.0:8443      0.0.0.0:*    users:(("python3",pid=10396,fd=3))
+tcp   LISTEN 0      4096            [::]:22           [::]:*    users:(("sshd",pid=1022,fd=4),("systemd",pid=1,fd=188))
+INSTALL_PERMISSIONS
+uid=1002(phoenix) gid=1003(phoenix) groups=1003(phoenix),4(adm),20(dialout),24(cdrom),25(floppy),29(audio),30(dip),44(video),46(plugdev),101(lxd),103(netdev),1000(ubuntu),1001(google-sudoers)
+User phoenix may run the following commands on free-server-oregon:
+    (ALL : ALL) NOPASSWD: ALL
+WIREGUARD_INTERFACE_NAMES
+wg tool not installed
+PYTHON
+Python 3.14.8
+TEST_DIRECTORY_COLLISIONS
+unused: /opt/multihost-monitor
+unused: /etc/multihost-monitor
+unused: /var/lib/multihost-monitor

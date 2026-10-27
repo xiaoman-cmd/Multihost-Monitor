@@ -1,6 +1,6 @@
-# MultiHost Monitor · V1.0 Phase 02
+# MultiHost Monitor · V1.0 Phase 03
 
-FastAPI + SQLAlchemy 2.0 + Alembic + SQLite WAL，React + TypeScript + Vite + Tailwind。在 Phase 01 基础上提供主机管理、Agent Token 认证、Go 只读采集、批量幂等上报与指标查询；保留安全管理员会话、健康检查和空白控制台。
+FastAPI + SQLAlchemy 2.0 + Alembic + SQLite WAL，React + TypeScript + Vite + Tailwind。在 Phase 01 基础上提供主机管理、Agent Token 认证、Go 只读采集、批量幂等上报与指标查询；提供真实采样 Dashboard、主机详情、连续段历史曲线和接入管理；保留安全管理员会话与健康检查。
 
 ## 快速启动
 
@@ -36,7 +36,7 @@ uv run --frozen alembic current
 uv run --frozen alembic downgrade base
 ```
 
-迁移优先读取环境变量 `MHM_DATABASE_URL`，其次 `.env`，最后 `alembic.ini`。离线 SQL：`uv run --frozen alembic upgrade head --sql`。使用环境变量运行命令不应在命令行中传入密码。
+迁移优先读取环境变量 `MHM_DATABASE_URL`，其次 `.env`，最后 `alembic.ini`。0003 需要连接数据库反射并重建采样叶表，须在备份后的维护窗口执行在线 Alembic 迁移，不支持直接生成完整 head 离线 SQL。使用环境变量运行命令不应在命令行中传入密码。
 
 ## 目录
 
@@ -48,4 +48,10 @@ uv run --frozen alembic downgrade base
 - `deploy/`：单进程开发脚本及部署边界。
 - `docs/`：架构、模型说明与阶段验收报告。
 
-Phase 02 详见 [Agent](agent/README.md)、[接口协议](docs/phase-02-protocol.md)、[安装与回滚](docs/phase-02-operations.md)、[阶段报告](docs/phase-02-report.md)。Phase 01 历史资料见 [架构](docs/architecture.md) 和 [报告](docs/phase-01-report.md)。真实 Linux 双机验收仍待提供测试环境。
+Phase 03 详见 [API 契约](docs/phase-03-api.md)、[只读部署准备](docs/phase-03-deployment-plan.md)、[报告](docs/phase-03-report.md)。新增 0003 迁移与默认 7 天分批保留清理；生产部署仍待正式批准。
+
+Phase 02 详见 [Agent](agent/README.md)、[接口协议](docs/phase-02-protocol.md)、[安装与回滚](docs/phase-02-operations.md)、[阶段报告](docs/phase-02-report.md)。Phase 01 历史资料见 [架构](docs/architecture.md) 和 [报告](docs/phase-01-report.md)。真实 Linux 双机验收尚未执行，当前两台云主机均为 AMD64，缺少 ARM64 验收环境。
+
+## 原始数据保留
+
+默认每分钟在单进程内分批清理 7 天以前的原始指标，每批每表最多 500 行，每轮最多 5 秒。查询同样限制为最近 7 天；删除不可恢复，上线前建立一致性备份。`MHM_RETENTION_ENABLED=false` 仅适合隔离测试库或经过明确评估的运维暂停。手工 dry-run：`PYTHONPATH=server uv run --frozen python -m app.retention`；实际清理需显式加 `--apply`。

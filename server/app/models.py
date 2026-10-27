@@ -60,6 +60,7 @@ class HostMetric(Base):
     load_1: Mapped[float] = mapped_column(Float)
     __table_args__ = (
         UniqueConstraint("host_id", "sampled_at", name="uq_host_metric_sample"),
+        Index("ix_host_metrics_retention", "sampled_at", "id"),
         CheckConstraint("cpu_percent BETWEEN 0 AND 100", name="ck_cpu_percent"),
         CheckConstraint("memory_total_bytes > 0 AND memory_used_bytes BETWEEN 0 AND memory_total_bytes", name="ck_memory_bytes"),
         CheckConstraint("load_1 >= 0", name="ck_load_1"),
@@ -77,6 +78,7 @@ class DiskMetric(Base):
     used_bytes: Mapped[int]
     __table_args__ = (
         UniqueConstraint("host_id", "mountpoint", "sampled_at", name="uq_disk_sample"),
+        Index("ix_disk_metrics_retention", "sampled_at", "id"),
         CheckConstraint("total_bytes > 0 AND used_bytes BETWEEN 0 AND total_bytes", name="ck_disk_bytes"),
         CheckConstraint("length(mountpoint) BETWEEN 1 AND 512", name="ck_disk_mount"),
         CheckConstraint("sampled_at > 0", name="ck_disk_sample_time"),
@@ -230,8 +232,10 @@ class AgentSample(Base):
     payload: Mapped[dict] = mapped_column(JSON)
     __table_args__ = (
         UniqueConstraint("host_id", "sample_id", name="uq_agent_sample_id"),
+        Index("ix_agent_samples_retention", "sampled_at", "id"),
         UniqueConstraint("host_id", "sampled_at", name="uq_agent_sample_time"),
         CheckConstraint("length(sample_id) = 36", name="ck_agent_sample_id"),
         CheckConstraint("length(content_hash) = 64", name="ck_agent_sample_hash"),
         CheckConstraint("sampled_at > 0 AND received_at > 0", name="ck_agent_sample_times"),
+        {"sqlite_autoincrement": True},
     )

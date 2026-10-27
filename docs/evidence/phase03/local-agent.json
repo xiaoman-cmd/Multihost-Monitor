@@ -1,0 +1,20 @@
+{
+  "kind": "real local macOS Agent; not Linux cloud acceptance",
+  "sample_count": 13,
+  "first_sampled_at_utc": 1793098905,
+  "last_sampled_at_utc": 1793099265,
+  "host": {
+    "os": "darwin/darwin/13.1",
+    "arch": "amd64",
+    "agent_version": "1.0.0-phase02"
+  },
+  "latest": {
+    "cpu_percent": 11.610779445667376,
+    "memory_total_bytes": 17179869184,
+    "memory_available_bytes": 7338491904,
+    "swap_total_bytes": 15032385536,
+    "swap_used_bytes": 13577486336
+  },
+  "foreign_key_check": [],
+  "journal_mode": "wal"
+}

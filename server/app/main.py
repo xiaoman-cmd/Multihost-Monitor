@@ -1,3 +1,4 @@
+import asyncio
 import secrets
 from contextlib import asynccontextmanager
 from pathlib import Path
@@ -13,7 +14,7 @@ from .db import make_engine, session_factory
 from .models import AdminSession, AdminUser, Host, now
 from .security import COOKIE_NAME, DUMMY_HASH, LoginLimiter, digest, hasher, verify
 
-REVISION = "0002_phase02"
+REVISION = "0003_phase03"
 DIST = Path(__file__).resolve().parents[2] / "web" / "dist"
 
 
@@ -30,6 +31,8 @@ def create_app(settings: Settings | None = None, *, static_dir: Path = DIST) -> 
 
     @asynccontextmanager
     async def lifespan(app):
+        stop = asyncio.Event()
+        maintenance = None
         try:
             with engine.connect() as connection:
                 if connection.scalar(text("SELECT version_num FROM alembic_version")) != REVISION:
@@ -44,11 +47,17 @@ def create_app(settings: Settings | None = None, *, static_dir: Path = DIST) -> 
                 elif not verify(settings.admin_password, admin.password_hash):
                     raise RuntimeError("Configured administrator password differs from database")
                 db.execute(delete(AdminSession).where(AdminSession.expires_at <= now()))
+            if settings.retention_enabled:
+                from .retention import retention_loop
+                maintenance = asyncio.create_task(retention_loop(sessions, stop, app.state))
             yield
         finally:
+            stop.set()
+            if maintenance is not None:
+                await maintenance
             engine.dispose()
 
-    app = FastAPI(title="MultiHost Monitor", version="1.0.0-phase02", lifespan=lifespan,
+    app = FastAPI(title="MultiHost Monitor", version="1.0.0-phase03", lifespan=lifespan,
                   docs_url=None, redoc_url=None, openapi_url=None)
     app.state.engine = engine
     app.state.sessions = sessions

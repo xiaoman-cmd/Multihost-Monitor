@@ -1,0 +1,56 @@
+[
+  {
+    "command": [
+      "go",
+      "version"
+    ],
+    "exit_code": 0,
+    "stdout": "go version go1.27.3 darwin/amd64\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "go",
+      "vet",
+      "./..."
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "/private/tmp/mhm-tools/staticcheck",
+      "./..."
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "go",
+      "mod",
+      "verify"
+    ],
+    "exit_code": 0,
+    "stdout": "all modules verified\n",
+    "stderr": ""
+  },
+  {
+    "command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -trimpath -o /private/tmp/mhm-phase03-agent-linux-amd64 ./cmd/monitor-agent",
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": "GOOS=linux GOARCH=arm64 CGO_ENABLED=0 go build -trimpath -o /private/tmp/mhm-phase03-agent-linux-arm64 ./cmd/monitor-agent",
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "race_tests_passed": 19,
+    "package_failures": []
+  }
+]

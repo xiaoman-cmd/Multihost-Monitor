@@ -1,0 +1,9 @@
+// Unit-test-only fixtures. Never imported by the application entrypoint.
+import {Detail,History,Host,Overview,Point} from './api';
+export const stamp=1800000000;
+export const host:Host={id:1,name:'fixture-host',hostname:'fixture.local',cloud_provider:'Test Cloud',region:'lab',tags:['test'],systemd_units:['ssh.service'],status:'online',last_seen_at:stamp-10,metadata_at:stamp-10,os:'linux/test',arch:'amd64',agent_version:'test',freshness:'fresh',sample_age_seconds:10,latest:{sampled_at:stamp-10,received_at:stamp-5,cpu_percent:25,memory_percent:50,memory_total_bytes:1024,memory_used_bytes:512,disk_percent:20,receive_rate:null,send_rate:5}};
+export const emptyOverview:Overview={server_time:stamp,offline_after_seconds:90,stats:{total:0,online:0,offline:0,disabled:0},total:0,items:[],next_after_id:null,providers:[]};
+export const populated:Overview={...emptyOverview,stats:{total:1,online:1,offline:0,disabled:0},total:1,items:[host],providers:['Test Cloud']};
+export const point=(at:number,value:number|null,segment:number|null=1):Point=>({at,bucket_at:at,segment,first_sample_at:at,last_sample_at:at,sample_count:value===null?0:1,cpu_percent:value,memory_percent:value,swap_percent:0,memory_used_bytes:512,swap_used_bytes:0,receive_rate:value,send_rate:value});
+export const history:History={server_time:stamp,from:stamp-3600,until:stamp,bucket_seconds:30,gap_after_seconds:90,points:[point(stamp-90,10),point(stamp-60,null,null),point(stamp-30,20,2)]};
+export const detail:Detail={server_time:stamp,host,sample:{sample_id:'fixture-sample',sampled_at:stamp-10,cpu_percent:25,load_1:.1,load_5:.2,load_15:.3,memory_total_bytes:1024,memory_available_bytes:512,swap_total_bytes:0,swap_used_bytes:0,uptime_seconds:1000,metadata:{hostname:'fixture.local',os:'linux/test',arch:'amd64',agent_version:'test'},disks:[],networks:[{interface:'test0',received_bytes:100,sent_bytes:200,receive_rate:null,send_rate:10}],services:[{unit:'ssh.service',state:'active'}]}};
