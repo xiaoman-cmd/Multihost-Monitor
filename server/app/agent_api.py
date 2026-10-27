@@ -224,3 +224,6 @@ def install_routes(app, sessions, authenticated, same_origin):
 
     from .dashboard_api import install_dashboard_routes
     install_dashboard_routes(app, sessions, authenticated, admin_write, write)
+
+    from .monitoring_api import install_monitoring_routes
+    install_monitoring_routes(app, sessions, authenticated, admin_write, write)

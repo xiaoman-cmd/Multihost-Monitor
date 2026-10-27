@@ -1,0 +1,44 @@
+{
+  "date": "2026-10-27",
+  "kind": "real loopback HTTP endpoint, temporary SQLite; no fake metrics, no third-party notification",
+  "mobile": [
+    {
+      "route": "#/checks",
+      "viewport": 375,
+      "scrollWidth": 375
+    },
+    {
+      "route": "check form",
+      "viewport": 375,
+      "scrollWidth": 375
+    },
+    {
+      "route": "channel form",
+      "viewport": 375,
+      "scrollWidth": 375
+    },
+    {
+      "route": "#/alerts",
+      "viewport": 375,
+      "scrollWidth": 360
+    },
+    {
+      "route": "#/events",
+      "viewport": 375,
+      "scrollWidth": 360
+    }
+  ],
+  "desktop": {
+    "scrollWidth": 1280,
+    "viewport": 1280
+  },
+  "verified": [
+    "real HTTP 200",
+    "real HTTP 503 triggers Firing",
+    "admin ack through confirmation dialog",
+    "real HTTP 200 recovers to Resolved",
+    "event history",
+    "external secret reference form"
+  ],
+  "console": []
+}

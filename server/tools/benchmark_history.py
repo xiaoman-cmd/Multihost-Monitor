@@ -47,7 +47,7 @@ def run():
                 db.execute(insert(HostMetric),metrics)
                 db.execute(insert(AgentSample),samples)
         password=secrets.token_urlsafe(32)
-        app=create_app(Settings(database_url=url,admin_password=password,retention_enabled=False,_env_file=None))
+        app=create_app(Settings(database_url=url,admin_password=password,retention_enabled=False,scheduler_enabled=False,_env_file=None))
         timings=[]
         with TestClient(app) as client:
             login=client.post('/api/auth/login',json={'username':'admin','password':password},headers={'Origin':'http://127.0.0.1:8000'})

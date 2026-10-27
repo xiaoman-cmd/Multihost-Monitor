@@ -18,3 +18,5 @@ web/dist/
 agent/config.json
 agent/bin/
 agent/dist/
+secrets/
+*.scheduler.lock

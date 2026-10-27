@@ -1,4 +1,4 @@
-# MultiHost Monitor · V1.0 Phase 03
+# MultiHost Monitor · V1.0 Phase 04
 
 FastAPI + SQLAlchemy 2.0 + Alembic + SQLite WAL，React + TypeScript + Vite + Tailwind。在 Phase 01 基础上提供主机管理、Agent Token 认证、Go 只读采集、批量幂等上报与指标查询；提供真实采样 Dashboard、主机详情、连续段历史曲线和接入管理；保留安全管理员会话与健康检查。
 
@@ -55,3 +55,13 @@ Phase 02 详见 [Agent](agent/README.md)、[接口协议](docs/phase-02-protocol
 ## 原始数据保留
 
 默认每分钟在单进程内分批清理 7 天以前的原始指标，每批每表最多 500 行，每轮最多 5 秒。查询同样限制为最近 7 天；删除不可恢复，上线前建立一致性备份。`MHM_RETENTION_ENABLED=false` 仅适合隔离测试库或经过明确评估的运维暂停。手工 dry-run：`PYTHONPATH=server uv run --frozen python -m app.retention`；实际清理需显式加 `--apply`。
+
+## Phase 04 服务监控与告警
+
+提供中心 HTTP/TCP 探测、TLS 证书剩余期、资源／systemd／离线四态告警、确认与静默、Webhook/SMTP 数据库 Outbox 和管理页面。单个 Uvicorn worker，lifespan 管理有界后台任务，数据库相邻锁防止重复调度器。
+
+先备份并停写，再迁移至 `0004_phase04`。如旧 notification_channels.config 含实际 URL／密码，迁移会在 DDL 前拒绝；须先在维护窗口转为受保护的 secret_ref，不能把密码提交 Git。默认仅探测公共单播地址；私网例外由中心管理员在独立 CIDR 配置中显式授予，云元数据始终拒绝。
+
+通知配置流程：以中心服务用户创建 `data/secrets`（0700）与 `<name>.json`（0600），在 UI 只填写 basename 引用。Webhook 文件包含 `url`（HTTPS）、可选 `bearer_token`；SMTP 文件包含 `host`、`port`（默认 465）、`from`、`to`（地址数组）、可选 `username`、`password`，支持 `tls_mode=implicit/starttls`，禁止明文降级。API 从不接受或返回实际密钥。不得将真实通知配置用于本地自动测试。
+
+详见 [架构](docs/phase-04-architecture.md)、[API](docs/phase-04-api.md)、[测试计划](docs/phase-04-test-plan.md)、[报告](docs/phase-04-report.md)。本阶段仅本地开发验收；Oracle/Google 均未修改，等待 Phase 05 部署授权。

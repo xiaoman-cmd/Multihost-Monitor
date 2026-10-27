@@ -95,7 +95,13 @@ class ServiceCheck(Base):
     interval_seconds: Mapped[int] = mapped_column(default=60, server_default="60")
     timeout_seconds: Mapped[int] = mapped_column(default=5, server_default="5")
     enabled: Mapped[bool] = mapped_column(Boolean(create_constraint=True, name="ck_check_enabled"), default=True)
+    expected_status_min: Mapped[int] = mapped_column(default=200, server_default="200")
+    expected_status_max: Mapped[int] = mapped_column(default=299, server_default="299")
+    tls_min_days: Mapped[int] = mapped_column(default=14, server_default="14")
+    next_run_at: Mapped[int] = mapped_column(default=0, server_default="0", index=True)
+    revision: Mapped[int] = mapped_column(default=1, server_default="1")
     __table_args__ = (
+        CheckConstraint("expected_status_min BETWEEN 100 AND 599 AND expected_status_max BETWEEN expected_status_min AND 599 AND tls_min_days BETWEEN 0 AND 365", name="ck_probe_expectation"),
         UniqueConstraint("host_id", "name", name="uq_host_check_name"),
         UniqueConstraint("id", "host_id", name="uq_check_host"),
         CheckConstraint("kind IN ('http','tcp','process')", name="ck_check_kind"),
@@ -113,6 +119,9 @@ class CheckResult(Base):
     status: Mapped[str] = mapped_column(String(16))
     latency_ms: Mapped[float | None] = mapped_column(Float)
     message: Mapped[str | None] = mapped_column(Text)
+    check_revision: Mapped[int] = mapped_column(default=1, server_default="1")
+    http_status: Mapped[int | None]
+    tls_expires_at: Mapped[int | None]
     __table_args__ = (
         ForeignKeyConstraint(["check_id", "host_id"], ["service_checks.id", "service_checks.host_id"], ondelete="CASCADE"),
         UniqueConstraint("check_id", "checked_at", name="uq_check_result_sample"),
@@ -134,7 +143,12 @@ class AlertRule(Base):
     duration_seconds: Mapped[int] = mapped_column(default=60)
     severity: Mapped[str] = mapped_column(String(16), default="warning")
     enabled: Mapped[bool] = mapped_column(Boolean(create_constraint=True, name="ck_rule_enabled"), default=True)
+    recovery_threshold: Mapped[float | None] = mapped_column(Float)
+    cooldown_seconds: Mapped[int] = mapped_column(default=3600, server_default="3600")
+    target: Mapped[str] = mapped_column(String(128), default="", server_default="")
+    channel_ids: Mapped[list] = mapped_column(JSON, default=list, server_default="[]")
     __table_args__ = (
+        CheckConstraint("cooldown_seconds BETWEEN 60 AND 604800 AND (recovery_threshold IS NULL OR recovery_threshold BETWEEN 0 AND 100)", name="ck_rule_recovery"),
         CheckConstraint("length(trim(name)) BETWEEN 1 AND 128", name="ck_rule_name"),
         CheckConstraint("metric IN ('cpu_percent','memory_percent','disk_percent','service_down','host_offline')", name="ck_rule_metric"),
         CheckConstraint("operator IN ('gt','gte','lt','lte','eq')", name="ck_rule_operator"),
@@ -153,6 +167,23 @@ class AlertInstance(Base):
     status: Mapped[str] = mapped_column(String(16), default="firing")
     opened_at: Mapped[int] = mapped_column(default=now)
     resolved_at: Mapped[int | None]
+    pending_since: Mapped[int | None]
+    fired_at: Mapped[int | None]
+    last_evaluated_at: Mapped[int | None]
+    data_status: Mapped[str] = mapped_column(String(16), default="missing", server_default="missing")
+    last_value: Mapped[float | None] = mapped_column(Float)
+    acknowledged_at: Mapped[int | None]
+    silenced_until: Mapped[int | None]
+    last_notified_at: Mapped[int | None]
+
+    @property
+    def state(self):
+        if self.status == "firing":
+            return "firing"
+        if self.pending_since is not None:
+            return "pending"
+        return "resolved" if self.fired_at is not None else "normal"
+
     __table_args__ = (
         CheckConstraint("status IN ('firing','resolved')", name="ck_alert_status"),
         CheckConstraint("length(fingerprint) BETWEEN 1 AND 255", name="ck_alert_fingerprint"),
@@ -187,15 +218,20 @@ class NotificationChannel(Base):
 class NotificationDelivery(Base):
     __tablename__ = "notification_deliveries"
     id: Mapped[int] = mapped_column(primary_key=True)
-    event_id: Mapped[int] = mapped_column(ForeignKey("alert_events.id", ondelete="CASCADE"))
+    event_id: Mapped[int | None] = mapped_column(ForeignKey("alert_events.id", ondelete="CASCADE"))
     channel_id: Mapped[int] = mapped_column(ForeignKey("notification_channels.id", ondelete="CASCADE"), index=True)
     status: Mapped[str] = mapped_column(String(16), default="pending")
     attempts: Mapped[int] = mapped_column(default=0)
     created_at: Mapped[int] = mapped_column(default=now)
     delivered_at: Mapped[int | None]
     last_error: Mapped[str | None] = mapped_column(Text)
+    next_attempt_at: Mapped[int] = mapped_column(default=0, server_default="0", index=True)
+    lease_until: Mapped[int] = mapped_column(default=0, server_default="0")
+    idempotency_key: Mapped[str | None] = mapped_column(String(64))
+    payload: Mapped[dict] = mapped_column(JSON, default=dict, server_default="{}")
     __table_args__ = (
         UniqueConstraint("event_id", "channel_id", name="uq_event_channel"),
+        UniqueConstraint("idempotency_key", name="uq_delivery_idempotency"),
         CheckConstraint("status IN ('pending','sent','failed')", name="ck_delivery_status"),
         CheckConstraint("attempts >= 0", name="ck_delivery_attempts"),
         CheckConstraint("(status = 'sent' AND delivered_at IS NOT NULL AND delivered_at >= created_at) OR (status != 'sent' AND delivered_at IS NULL)", name="ck_delivery_time"),

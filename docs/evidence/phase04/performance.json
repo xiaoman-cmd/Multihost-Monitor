@@ -1,0 +1,25 @@
+{
+  "kind": "synthetic temporary file SQLite; no network; not production capacity acceptance",
+  "platform": "macOS-13.1-x86_64-i386-64bit",
+  "python": "3.12.13",
+  "pairs": 100,
+  "initial_evaluation_and_atomic_outbox_ms": 1073.6281909048557,
+  "steady_batch_ms_each": [
+    447.76669098064303,
+    471.461548935622,
+    516.9062579516321,
+    471.7186181806028,
+    481.5064549911767
+  ],
+  "steady_batch_ms_median": 471.7186181806028,
+  "claim_count": 16,
+  "claim_ms": 26.54572483152151,
+  "counts": {
+    "hosts": 50,
+    "alert_instances": 100,
+    "alert_events": 100,
+    "notification_deliveries": 200
+  },
+  "foreign_key_errors": 0,
+  "journal_mode": "wal"
+}

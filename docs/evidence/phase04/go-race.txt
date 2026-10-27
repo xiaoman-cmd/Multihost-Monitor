@@ -1,0 +1,7 @@
+?   	multihost-monitor/agent/cmd/monitor-agent	[no test files]
+ok  	multihost-monitor/agent/internal/collector	3.337s
+ok  	multihost-monitor/agent/internal/config	4.430s
+?   	multihost-monitor/agent/internal/model	[no test files]
+ok  	multihost-monitor/agent/internal/queue	3.776s
+ok  	multihost-monitor/agent/internal/runtime	6.789s
+ok  	multihost-monitor/agent/internal/transport	5.658s

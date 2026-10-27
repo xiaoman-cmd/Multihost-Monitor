@@ -1,0 +1,224 @@
+{
+  "kind": "real private loopback endpoint; scheduler-produced results, not inserted fixtures",
+  "checks": [
+    {
+      "id": 1,
+      "name": "本地 HTTP 健康检查",
+      "kind": "http",
+      "target": "http://127.0.0.1:60680/health",
+      "interval_seconds": 30
+    }
+  ],
+  "results": [
+    {
+      "checked_at": 1793102827,
+      "status": "up",
+      "http_status": 200,
+      "latency_ms": 7.789848139509559,
+      "message": "ok"
+    },
+    {
+      "checked_at": 1793102857,
+      "status": "up",
+      "http_status": 200,
+      "latency_ms": 8.787317899987102,
+      "message": "ok"
+    },
+    {
+      "checked_at": 1793102887,
+      "status": "up",
+      "http_status": 200,
+      "latency_ms": 7.22898100502789,
+      "message": "ok"
+    },
+    {
+      "checked_at": 1793102917,
+      "status": "up",
+      "http_status": 200,
+      "latency_ms": 6.922556785866618,
+      "message": "ok"
+    },
+    {
+      "checked_at": 1793102947,
+      "status": "up",
+      "http_status": 200,
+      "latency_ms": 7.340097799897194,
+      "message": "ok"
+    },
+    {
+      "checked_at": 1793102977,
+      "status": "up",
+      "http_status": 200,
+      "latency_ms": 8.61698598600924,
+      "message": "ok"
+    },
+    {
+      "checked_at": 1793103007,
+      "status": "up",
+      "http_status": 200,
+      "latency_ms": 7.5369831174612045,
+      "message": "ok"
+    },
+    {
+      "checked_at": 1793103037,
+      "status": "up",
+      "http_status": 200,
+      "latency_ms": 7.408226141706109,
+      "message": "ok"
+    },
+    {
+      "checked_at": 1793103067,
+      "status": "up",
+      "http_status": 200,
+      "latency_ms": 6.244860822334886,
+      "message": "ok"
+    },
+    {
+      "checked_at": 1793103097,
+      "status": "down",
+      "http_status": 503,
+      "latency_ms": 7.7142189256846905,
+      "message": "http_status_rejected"
+    },
+    {
+      "checked_at": 1793103127,
+      "status": "down",
+      "http_status": 503,
+      "latency_ms": 6.302946014329791,
+      "message": "http_status_rejected"
+    },
+    {
+      "checked_at": 1793103157,
+      "status": "down",
+      "http_status": 503,
+      "latency_ms": 6.455532042309642,
+      "message": "http_status_rejected"
+    },
+    {
+      "checked_at": 1793103187,
+      "status": "down",
+      "http_status": 503,
+      "latency_ms": 5.824237829074264,
+      "message": "http_status_rejected"
+    },
+    {
+      "checked_at": 1793103217,
+      "status": "down",
+      "http_status": 503,
+      "latency_ms": 6.647813133895397,
+      "message": "http_status_rejected"
+    },
+    {
+      "checked_at": 1793103247,
+      "status": "up",
+      "http_status": 200,
+      "latency_ms": 7.519738981500268,
+      "message": "ok"
+    },
+    {
+      "checked_at": 1793103277,
+      "status": "up",
+      "http_status": 200,
+      "latency_ms": 8.273431099951267,
+      "message": "ok"
+    },
+    {
+      "checked_at": 1793103307,
+      "status": "up",
+      "http_status": 200,
+      "latency_ms": 8.639093954116106,
+      "message": "ok"
+    },
+    {
+      "checked_at": 1793103337,
+      "status": "up",
+      "http_status": 200,
+      "latency_ms": 9.313805028796196,
+      "message": "ok"
+    },
+    {
+      "checked_at": 1793103367,
+      "status": "up",
+      "http_status": 200,
+      "latency_ms": 13.409898150712252,
+      "message": "ok"
+    },
+    {
+      "checked_at": 1793103397,
+      "status": "up",
+      "http_status": 200,
+      "latency_ms": 8.673861855641007,
+      "message": "ok"
+    },
+    {
+      "checked_at": 1793103427,
+      "status": "up",
+      "http_status": 200,
+      "latency_ms": 8.532491978257895,
+      "message": "ok"
+    },
+    {
+      "checked_at": 1793103457,
+      "status": "up",
+      "http_status": 200,
+      "latency_ms": 7.229824084788561,
+      "message": "ok"
+    },
+    {
+      "checked_at": 1793103488,
+      "status": "up",
+      "http_status": 200,
+      "latency_ms": 7.653759093955159,
+      "message": "ok"
+    },
+    {
+      "checked_at": 1793103518,
+      "status": "up",
+      "http_status": 200,
+      "latency_ms": 7.217970909550786,
+      "message": "ok"
+    },
+    {
+      "checked_at": 1793103548,
+      "status": "up",
+      "http_status": 200,
+      "latency_ms": 7.881444878876209,
+      "message": "ok"
+    },
+    {
+      "checked_at": 1793103578,
+      "status": "up",
+      "http_status": 200,
+      "latency_ms": 7.74362706579268,
+      "message": "ok"
+    },
+    {
+      "checked_at": 1793103608,
+      "status": "up",
+      "http_status": 200,
+      "latency_ms": 9.101816918700933,
+      "message": "ok"
+    }
+  ],
+  "events": [
+    {
+      "kind": "firing",
+      "created_at": 1793103099,
+      "message": "threshold_exceeded"
+    },
+    {
+      "kind": "acknowledged",
+      "created_at": 1793103226,
+      "message": "acknowledged_by_admin"
+    },
+    {
+      "kind": "resolved",
+      "created_at": 1793103247,
+      "message": "recovered"
+    }
+  ],
+  "agent_metric_rows": 0,
+  "notification_channels": 0,
+  "notification_deliveries": 0,
+  "foreign_key_check": []
+}

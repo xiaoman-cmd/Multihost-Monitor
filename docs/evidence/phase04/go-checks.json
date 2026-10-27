@@ -1,0 +1,15 @@
+{
+  "command": "go test -race -count=1 ./...",
+  "platform": "darwin/amd64",
+  "top_level_tests": 19,
+  "result": "passed all packages; temporary local TLS listeners and native system reads authorized",
+  "go_vet": {
+    "command": "go vet ./...",
+    "exit_code": 0
+  },
+  "staticcheck": {
+    "command": "staticcheck ./...",
+    "exit_code": 0
+  },
+  "agent_sources_unchanged_from_phase03": true
+}

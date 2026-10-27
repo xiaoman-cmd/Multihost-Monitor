@@ -1,0 +1,1706 @@
+{
+  "phase03_schema": {
+    "service_checks": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "host_id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR(128)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "kind",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "target",
+          "type": "VARCHAR(2048)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "interval_seconds",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": "'60'",
+          "primary_key": 0
+        },
+        {
+          "name": "timeout_seconds",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": "'5'",
+          "primary_key": 0
+        },
+        {
+          "name": "enabled",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "checks": [
+        {
+          "sqltext": "enabled IN (0, 1)",
+          "name": "ck_check_enabled"
+        },
+        {
+          "sqltext": "kind IN ('http','tcp','process')",
+          "name": "ck_check_kind"
+        },
+        {
+          "sqltext": "length(trim(name)) BETWEEN 1 AND 128 AND length(target) BETWEEN 1 AND 2048",
+          "name": "ck_check_text"
+        },
+        {
+          "sqltext": "interval_seconds >= 5 AND timeout_seconds > 0 AND timeout_seconds <= interval_seconds",
+          "name": "ck_check_timing"
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "host_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "hosts",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {
+            "ondelete": "CASCADE"
+          }
+        }
+      ],
+      "unique": [
+        {
+          "name": "uq_host_check_name",
+          "column_names": [
+            "host_id",
+            "name"
+          ]
+        },
+        {
+          "name": "uq_check_host",
+          "column_names": [
+            "id",
+            "host_id"
+          ]
+        }
+      ],
+      "indexes": []
+    },
+    "check_results": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "check_id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "host_id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "checked_at",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "latency_ms",
+          "type": "FLOAT",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "message",
+          "type": "TEXT",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "checks": [
+        {
+          "sqltext": "latency_ms IS NULL OR latency_ms >= 0",
+          "name": "ck_result_latency"
+        },
+        {
+          "sqltext": "status IN ('up','down','unknown')",
+          "name": "ck_result_status"
+        },
+        {
+          "sqltext": "checked_at > 0",
+          "name": "ck_result_time"
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "check_id",
+            "host_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "service_checks",
+          "referred_columns": [
+            "id",
+            "host_id"
+          ],
+          "options": {
+            "ondelete": "CASCADE"
+          }
+        }
+      ],
+      "unique": [
+        {
+          "name": "uq_check_result_sample",
+          "column_names": [
+            "check_id",
+            "checked_at"
+          ]
+        }
+      ],
+      "indexes": [
+        {
+          "name": "ix_check_result_host_time",
+          "column_names": [
+            "host_id",
+            "checked_at"
+          ],
+          "unique": 0,
+          "dialect_options": {}
+        }
+      ]
+    },
+    "alert_rules": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "host_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR(128)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "metric",
+          "type": "VARCHAR(32)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "operator",
+          "type": "VARCHAR(8)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "threshold",
+          "type": "FLOAT",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "duration_seconds",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "severity",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "enabled",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "checks": [
+        {
+          "sqltext": "duration_seconds >= 0",
+          "name": "ck_rule_duration"
+        },
+        {
+          "sqltext": "enabled IN (0, 1)",
+          "name": "ck_rule_enabled"
+        },
+        {
+          "sqltext": "metric IN ('cpu_percent','memory_percent','disk_percent','service_down','host_offline')",
+          "name": "ck_rule_metric"
+        },
+        {
+          "sqltext": "length(trim(name)) BETWEEN 1 AND 128",
+          "name": "ck_rule_name"
+        },
+        {
+          "sqltext": "operator IN ('gt','gte','lt','lte','eq')",
+          "name": "ck_rule_operator"
+        },
+        {
+          "sqltext": "severity IN ('info','warning','critical')",
+          "name": "ck_rule_severity"
+        },
+        {
+          "sqltext": "threshold BETWEEN 0 AND 100",
+          "name": "ck_rule_threshold"
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "host_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "hosts",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {
+            "ondelete": "CASCADE"
+          }
+        }
+      ],
+      "unique": [
+        {
+          "name": null,
+          "column_names": [
+            "name"
+          ]
+        }
+      ],
+      "indexes": [
+        {
+          "name": "ix_alert_rules_host_id",
+          "column_names": [
+            "host_id"
+          ],
+          "unique": 0,
+          "dialect_options": {}
+        }
+      ]
+    },
+    "alert_instances": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "rule_id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "host_id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "fingerprint",
+          "type": "VARCHAR(255)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "opened_at",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "resolved_at",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "checks": [
+        {
+          "sqltext": "length(fingerprint) BETWEEN 1 AND 255",
+          "name": "ck_alert_fingerprint"
+        },
+        {
+          "sqltext": "(status = 'firing' AND resolved_at IS NULL) OR (status = 'resolved' AND resolved_at IS NOT NULL AND resolved_at >= opened_at)",
+          "name": "ck_alert_resolution"
+        },
+        {
+          "sqltext": "status IN ('firing','resolved')",
+          "name": "ck_alert_status"
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "host_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "hosts",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {
+            "ondelete": "CASCADE"
+          }
+        },
+        {
+          "name": null,
+          "constrained_columns": [
+            "rule_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "alert_rules",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {
+            "ondelete": "CASCADE"
+          }
+        }
+      ],
+      "unique": [],
+      "indexes": [
+        {
+          "name": "ix_alert_instances_host_id",
+          "column_names": [
+            "host_id"
+          ],
+          "unique": 0,
+          "dialect_options": {}
+        },
+        {
+          "name": "ix_alert_instances_rule_id",
+          "column_names": [
+            "rule_id"
+          ],
+          "unique": 0,
+          "dialect_options": {}
+        },
+        {
+          "name": "uq_active_alert",
+          "column_names": [
+            "rule_id",
+            "host_id",
+            "fingerprint"
+          ],
+          "unique": 1,
+          "dialect_options": {
+            "sqlite_where": "status = 'firing'"
+          }
+        }
+      ]
+    },
+    "alert_events": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "alert_id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "kind",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "created_at",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "message",
+          "type": "TEXT",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "checks": [
+        {
+          "sqltext": "kind IN ('firing','resolved','acknowledged')",
+          "name": "ck_event_kind"
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "alert_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "alert_instances",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {
+            "ondelete": "CASCADE"
+          }
+        }
+      ],
+      "unique": [],
+      "indexes": [
+        {
+          "name": "ix_alert_events_alert_id",
+          "column_names": [
+            "alert_id"
+          ],
+          "unique": 0,
+          "dialect_options": {}
+        }
+      ]
+    },
+    "notification_channels": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR(128)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "kind",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "config",
+          "type": "JSON",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "enabled",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "checks": [
+        {
+          "sqltext": "enabled IN (0, 1)",
+          "name": "ck_channel_enabled"
+        },
+        {
+          "sqltext": "kind IN ('webhook','email')",
+          "name": "ck_channel_kind"
+        },
+        {
+          "sqltext": "length(trim(name)) BETWEEN 1 AND 128",
+          "name": "ck_channel_name"
+        }
+      ],
+      "foreign_keys": [],
+      "unique": [
+        {
+          "name": null,
+          "column_names": [
+            "name"
+          ]
+        }
+      ],
+      "indexes": []
+    },
+    "notification_deliveries": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "event_id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "channel_id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "attempts",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "created_at",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "delivered_at",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "last_error",
+          "type": "TEXT",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "checks": [
+        {
+          "sqltext": "attempts >= 0",
+          "name": "ck_delivery_attempts"
+        },
+        {
+          "sqltext": "status IN ('pending','sent','failed')",
+          "name": "ck_delivery_status"
+        },
+        {
+          "sqltext": "(status = 'sent' AND delivered_at IS NOT NULL AND delivered_at >= created_at) OR (status != 'sent' AND delivered_at IS NULL)",
+          "name": "ck_delivery_time"
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "channel_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "notification_channels",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {
+            "ondelete": "CASCADE"
+          }
+        },
+        {
+          "name": null,
+          "constrained_columns": [
+            "event_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "alert_events",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {
+            "ondelete": "CASCADE"
+          }
+        }
+      ],
+      "unique": [
+        {
+          "name": "uq_event_channel",
+          "column_names": [
+            "event_id",
+            "channel_id"
+          ]
+        }
+      ],
+      "indexes": [
+        {
+          "name": "ix_notification_deliveries_channel_id",
+          "column_names": [
+            "channel_id"
+          ],
+          "unique": 0,
+          "dialect_options": {}
+        }
+      ]
+    }
+  },
+  "phase04_schema": {
+    "service_checks": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "host_id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR(128)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "kind",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "target",
+          "type": "VARCHAR(2048)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "interval_seconds",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": "'60'",
+          "primary_key": 0
+        },
+        {
+          "name": "timeout_seconds",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": "'5'",
+          "primary_key": 0
+        },
+        {
+          "name": "enabled",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "expected_status_min",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": "'200'",
+          "primary_key": 0
+        },
+        {
+          "name": "expected_status_max",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": "'299'",
+          "primary_key": 0
+        },
+        {
+          "name": "tls_min_days",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": "'14'",
+          "primary_key": 0
+        },
+        {
+          "name": "next_run_at",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": "'0'",
+          "primary_key": 0
+        },
+        {
+          "name": "revision",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": "'1'",
+          "primary_key": 0
+        }
+      ],
+      "checks": [
+        {
+          "sqltext": "enabled IN (0, 1)",
+          "name": "ck_check_enabled"
+        },
+        {
+          "sqltext": "kind IN ('http','tcp','process')",
+          "name": "ck_check_kind"
+        },
+        {
+          "sqltext": "length(trim(name)) BETWEEN 1 AND 128 AND length(target) BETWEEN 1 AND 2048",
+          "name": "ck_check_text"
+        },
+        {
+          "sqltext": "interval_seconds >= 5 AND timeout_seconds > 0 AND timeout_seconds <= interval_seconds",
+          "name": "ck_check_timing"
+        },
+        {
+          "sqltext": "expected_status_min BETWEEN 100 AND 599 AND expected_status_max BETWEEN expected_status_min AND 599 AND tls_min_days BETWEEN 0 AND 365",
+          "name": "ck_probe_expectation"
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "host_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "hosts",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {
+            "ondelete": "CASCADE"
+          }
+        }
+      ],
+      "unique": [
+        {
+          "name": "uq_host_check_name",
+          "column_names": [
+            "host_id",
+            "name"
+          ]
+        },
+        {
+          "name": "uq_check_host",
+          "column_names": [
+            "id",
+            "host_id"
+          ]
+        }
+      ],
+      "indexes": [
+        {
+          "name": "ix_service_checks_next_run_at",
+          "column_names": [
+            "next_run_at"
+          ],
+          "unique": 0,
+          "dialect_options": {}
+        }
+      ]
+    },
+    "check_results": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "check_id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "host_id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "checked_at",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "latency_ms",
+          "type": "FLOAT",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "message",
+          "type": "TEXT",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "check_revision",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": "'1'",
+          "primary_key": 0
+        },
+        {
+          "name": "http_status",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "tls_expires_at",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "checks": [
+        {
+          "sqltext": "latency_ms IS NULL OR latency_ms >= 0",
+          "name": "ck_result_latency"
+        },
+        {
+          "sqltext": "status IN ('up','down','unknown')",
+          "name": "ck_result_status"
+        },
+        {
+          "sqltext": "checked_at > 0",
+          "name": "ck_result_time"
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "check_id",
+            "host_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "service_checks",
+          "referred_columns": [
+            "id",
+            "host_id"
+          ],
+          "options": {
+            "ondelete": "CASCADE"
+          }
+        }
+      ],
+      "unique": [
+        {
+          "name": "uq_check_result_sample",
+          "column_names": [
+            "check_id",
+            "checked_at"
+          ]
+        }
+      ],
+      "indexes": [
+        {
+          "name": "ix_check_result_host_time",
+          "column_names": [
+            "host_id",
+            "checked_at"
+          ],
+          "unique": 0,
+          "dialect_options": {}
+        }
+      ]
+    },
+    "alert_rules": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "host_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR(128)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "metric",
+          "type": "VARCHAR(32)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "operator",
+          "type": "VARCHAR(8)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "threshold",
+          "type": "FLOAT",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "duration_seconds",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "severity",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "enabled",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "recovery_threshold",
+          "type": "FLOAT",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "cooldown_seconds",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": "'3600'",
+          "primary_key": 0
+        },
+        {
+          "name": "target",
+          "type": "VARCHAR(128)",
+          "nullable": false,
+          "default": "''",
+          "primary_key": 0
+        },
+        {
+          "name": "channel_ids",
+          "type": "JSON",
+          "nullable": false,
+          "default": "'[]'",
+          "primary_key": 0
+        }
+      ],
+      "checks": [
+        {
+          "sqltext": "duration_seconds >= 0",
+          "name": "ck_rule_duration"
+        },
+        {
+          "sqltext": "enabled IN (0, 1)",
+          "name": "ck_rule_enabled"
+        },
+        {
+          "sqltext": "metric IN ('cpu_percent','memory_percent','disk_percent','service_down','host_offline')",
+          "name": "ck_rule_metric"
+        },
+        {
+          "sqltext": "length(trim(name)) BETWEEN 1 AND 128",
+          "name": "ck_rule_name"
+        },
+        {
+          "sqltext": "operator IN ('gt','gte','lt','lte','eq')",
+          "name": "ck_rule_operator"
+        },
+        {
+          "sqltext": "cooldown_seconds BETWEEN 60 AND 604800 AND (recovery_threshold IS NULL OR recovery_threshold BETWEEN 0 AND 100)",
+          "name": "ck_rule_recovery"
+        },
+        {
+          "sqltext": "severity IN ('info','warning','critical')",
+          "name": "ck_rule_severity"
+        },
+        {
+          "sqltext": "threshold BETWEEN 0 AND 100",
+          "name": "ck_rule_threshold"
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "host_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "hosts",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {
+            "ondelete": "CASCADE"
+          }
+        }
+      ],
+      "unique": [
+        {
+          "name": null,
+          "column_names": [
+            "name"
+          ]
+        }
+      ],
+      "indexes": [
+        {
+          "name": "ix_alert_rules_host_id",
+          "column_names": [
+            "host_id"
+          ],
+          "unique": 0,
+          "dialect_options": {}
+        }
+      ]
+    },
+    "alert_instances": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "rule_id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "host_id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "fingerprint",
+          "type": "VARCHAR(255)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "opened_at",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "resolved_at",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "pending_since",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "fired_at",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "last_evaluated_at",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "acknowledged_at",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "silenced_until",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "last_notified_at",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "last_value",
+          "type": "FLOAT",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "data_status",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "default": "'missing'",
+          "primary_key": 0
+        }
+      ],
+      "checks": [
+        {
+          "sqltext": "length(fingerprint) BETWEEN 1 AND 255",
+          "name": "ck_alert_fingerprint"
+        },
+        {
+          "sqltext": "(status = 'firing' AND resolved_at IS NULL) OR (status = 'resolved' AND resolved_at IS NOT NULL AND resolved_at >= opened_at)",
+          "name": "ck_alert_resolution"
+        },
+        {
+          "sqltext": "status IN ('firing','resolved')",
+          "name": "ck_alert_status"
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "host_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "hosts",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {
+            "ondelete": "CASCADE"
+          }
+        },
+        {
+          "name": null,
+          "constrained_columns": [
+            "rule_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "alert_rules",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {
+            "ondelete": "CASCADE"
+          }
+        }
+      ],
+      "unique": [],
+      "indexes": [
+        {
+          "name": "ix_alert_instances_host_id",
+          "column_names": [
+            "host_id"
+          ],
+          "unique": 0,
+          "dialect_options": {}
+        },
+        {
+          "name": "ix_alert_instances_rule_id",
+          "column_names": [
+            "rule_id"
+          ],
+          "unique": 0,
+          "dialect_options": {}
+        },
+        {
+          "name": "uq_active_alert",
+          "column_names": [
+            "rule_id",
+            "host_id",
+            "fingerprint"
+          ],
+          "unique": 1,
+          "dialect_options": {
+            "sqlite_where": "status = 'firing'"
+          }
+        }
+      ]
+    },
+    "alert_events": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "alert_id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "kind",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "created_at",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "message",
+          "type": "TEXT",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "checks": [
+        {
+          "sqltext": "kind IN ('firing','resolved','acknowledged')",
+          "name": "ck_event_kind"
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "alert_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "alert_instances",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {
+            "ondelete": "CASCADE"
+          }
+        }
+      ],
+      "unique": [],
+      "indexes": [
+        {
+          "name": "ix_alert_events_alert_id",
+          "column_names": [
+            "alert_id"
+          ],
+          "unique": 0,
+          "dialect_options": {}
+        }
+      ]
+    },
+    "notification_channels": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR(128)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "kind",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "config",
+          "type": "JSON",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "enabled",
+          "type": "BOOLEAN",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        }
+      ],
+      "checks": [
+        {
+          "sqltext": "enabled IN (0, 1)",
+          "name": "ck_channel_enabled"
+        },
+        {
+          "sqltext": "kind IN ('webhook','email')",
+          "name": "ck_channel_kind"
+        },
+        {
+          "sqltext": "length(trim(name)) BETWEEN 1 AND 128",
+          "name": "ck_channel_name"
+        }
+      ],
+      "foreign_keys": [],
+      "unique": [
+        {
+          "name": null,
+          "column_names": [
+            "name"
+          ]
+        }
+      ],
+      "indexes": []
+    },
+    "notification_deliveries": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 1
+        },
+        {
+          "name": "event_id",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "channel_id",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "attempts",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "created_at",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "delivered_at",
+          "type": "INTEGER",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "last_error",
+          "type": "TEXT",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "next_attempt_at",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": "'0'",
+          "primary_key": 0
+        },
+        {
+          "name": "lease_until",
+          "type": "INTEGER",
+          "nullable": false,
+          "default": "'0'",
+          "primary_key": 0
+        },
+        {
+          "name": "idempotency_key",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "default": null,
+          "primary_key": 0
+        },
+        {
+          "name": "payload",
+          "type": "JSON",
+          "nullable": false,
+          "default": "'{}'",
+          "primary_key": 0
+        }
+      ],
+      "checks": [
+        {
+          "sqltext": "attempts >= 0",
+          "name": "ck_delivery_attempts"
+        },
+        {
+          "sqltext": "status IN ('pending','sent','failed')",
+          "name": "ck_delivery_status"
+        },
+        {
+          "sqltext": "(status = 'sent' AND delivered_at IS NOT NULL AND delivered_at >= created_at) OR (status != 'sent' AND delivered_at IS NULL)",
+          "name": "ck_delivery_time"
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": null,
+          "constrained_columns": [
+            "event_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "alert_events",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {
+            "ondelete": "CASCADE"
+          }
+        },
+        {
+          "name": null,
+          "constrained_columns": [
+            "channel_id"
+          ],
+          "referred_schema": null,
+          "referred_table": "notification_channels",
+          "referred_columns": [
+            "id"
+          ],
+          "options": {
+            "ondelete": "CASCADE"
+          }
+        }
+      ],
+      "unique": [
+        {
+          "name": "uq_event_channel",
+          "column_names": [
+            "event_id",
+            "channel_id"
+          ]
+        },
+        {
+          "name": "uq_delivery_idempotency",
+          "column_names": [
+            "idempotency_key"
+          ]
+        }
+      ],
+      "indexes": [
+        {
+          "name": "ix_notification_deliveries_channel_id",
+          "column_names": [
+            "channel_id"
+          ],
+          "unique": 0,
+          "dialect_options": {}
+        },
+        {
+          "name": "ix_notification_deliveries_next_attempt_at",
+          "column_names": [
+            "next_attempt_at"
+          ],
+          "unique": 0,
+          "dialect_options": {}
+        }
+      ]
+    }
+  },
+  "pragmas": {
+    "foreign_keys": 1,
+    "journal_mode": "wal",
+    "busy_timeout": 5000,
+    "foreign_key_check": [],
+    "integrity_check": "ok"
+  },
+  "prior_migrations": {
+    "server/migrations/versions/0001_phase01_phase_01_schema.py": {
+      "unchanged": true,
+      "sha256": "6049a1cf778d5fe7f3b44c94ad258a52577a5ecb88af4a3204ff732203a4de8d"
+    },
+    "server/migrations/versions/0002_phase02_agent_host_configuration_and_atomic_.py": {
+      "unchanged": true,
+      "sha256": "ec57ed6f5a6d1c5304e4a27a81b993aaf86bfb0c5b0e3cb347636020ad5de30d"
+    },
+    "server/migrations/versions/0003_phase03_dashboard_retention_indexes.py": {
+      "unchanged": true,
+      "sha256": "86bba6d8e320db58a40f433b92c8766efc288506e0939f3e342c47d1b681fc78"
+    }
+  },
+  "agent_protocol_and_sources_unchanged": true,
+  "dependencies_unchanged": true,
+  "ignored_sensitive_paths": [
+    ".env",
+    "data/monitor.db",
+    "data/monitor.db-wal",
+    "data/secrets/webhook.json",
+    "secrets/smtp.json",
+    "agent/config.json",
+    "test.key",
+    "test.pem",
+    "test.token",
+    "monitor.db.scheduler.lock"
+  ]
+}

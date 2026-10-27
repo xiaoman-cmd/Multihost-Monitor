@@ -8,7 +8,7 @@ export type Detail = {server_time:number;host:Host;sample:Sample|null};
 export type Point = {at:number;bucket_at:number;segment:number|null;first_sample_at:number|null;last_sample_at:number|null;sample_count:number;cpu_percent:number|null;memory_percent:number|null;swap_percent:number|null;memory_used_bytes:number|null;swap_used_bytes:number|null;receive_rate:number|null;send_rate:number|null};
 export type History = {server_time:number;from:number;until:number;bucket_seconds:number;gap_after_seconds:number;points:Point[]};
 export type Profile = {name:string;hostname:string;cloud_provider:string;region:string;tags:string[];systemd_units:string[]};
-export class ApiError extends Error { constructor(public status:number) {super(status===401?'会话已过期，请重新登录。':status===409?'主机名称冲突，请更换名称后重试。':status===422?'请求超出限制或字段无效，请检查输入；历史数据过多时请选择更短范围。':status===429?'请求过于频繁，请稍后重试。':'服务请求失败，请检查连接后重试。');} }
+export class ApiError extends Error { constructor(public status:number) {super(status===401?'会话已过期，请重新登录。':status===409?'配置冲突，请检查名称或已评估规则的目标是否允许更改。':status===422?'请求超出限制或字段无效，请检查输入；历史数据过多时请选择更短范围。':status===429?'请求过于频繁，请稍后重试。':'服务请求失败，请检查连接后重试。');} }
 export async function api<T>(path:string,options:RequestInit={}):Promise<T>{
   const controller=new AbortController();const abort=()=>controller.abort();
   options.signal?.addEventListener('abort',abort,{once:true});

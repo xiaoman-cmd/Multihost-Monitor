@@ -8,13 +8,13 @@ import time
 from sqlalchemy import delete, func, select, text
 from sqlalchemy.exc import SQLAlchemyError
 
-from .models import AgentSample, DiskMetric, HostMetric, now
+from .models import AgentSample, CheckResult, DiskMetric, HostMetric, now
 
 TABLES = (AgentSample, DiskMetric, HostMetric)
 DAYS = 7 * 86400
 
 
-def cleanup_batch(sessions, *, cutoff=None, batch_size=500, apply=False):
+def cleanup_batch(sessions, *, cutoff=None, batch_size=500, apply=False, include_checks=False):
     if not 1 <= batch_size <= 1000:
         raise ValueError('batch_size must be between 1 and 1000')
     # The clock determines the oldest eligible boundary; callers cannot shorten retention.
@@ -23,14 +23,15 @@ def cleanup_batch(sessions, *, cutoff=None, batch_size=500, apply=False):
     with sessions.begin() as db:
         if apply:
             db.execute(text('BEGIN IMMEDIATE'))
-        for model in TABLES:
+        for model in (*TABLES, CheckResult) if include_checks else TABLES:
+            timestamp = model.checked_at if model is CheckResult else model.sampled_at
             removed = 0
             if apply:
-                ids = select(model.id).where(model.sampled_at < cutoff).order_by(model.sampled_at, model.id).limit(batch_size)
+                ids = select(model.id).where(timestamp < cutoff).order_by(timestamp, model.id).limit(batch_size)
                 removed = db.execute(delete(model).where(model.id.in_(ids))).rowcount
             result['deleted'][model.__tablename__] = removed
             result['remaining'][model.__tablename__] = db.scalar(
-                select(func.count()).select_from(model).where(model.sampled_at < cutoff))
+                select(func.count()).select_from(model).where(timestamp < cutoff))
     return result
 
 
@@ -39,7 +40,7 @@ def cleanup_cycle(sessions, *, budget_seconds=5, stop=None):
     cutoff = now() - DAYS
     report = None
     while time.monotonic() - started < budget_seconds and not (stop and stop.is_set()):
-        report = cleanup_batch(sessions, cutoff=cutoff, apply=True)
+        report = cleanup_batch(sessions, cutoff=cutoff, apply=True, include_checks=True)
         if not any(report['remaining'].values()):
             break
     return report

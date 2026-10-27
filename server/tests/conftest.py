@@ -28,7 +28,7 @@ def application(database, tmp_path):
     static.mkdir()
     (static / 'index.html').write_text('<html>monitor frontend</html>')
     (static / 'app.js').write_text('console.log("monitor")')
-    return create_app(Settings(database_url=url, admin_password=PASSWORD, retention_enabled=False, _env_file=None), static_dir=static)
+    return create_app(Settings(database_url=url, admin_password=PASSWORD, retention_enabled=False, scheduler_enabled=False, _env_file=None), static_dir=static)
 
 
 @pytest.fixture

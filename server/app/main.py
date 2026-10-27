@@ -14,7 +14,7 @@ from .db import make_engine, session_factory
 from .models import AdminSession, AdminUser, Host, now
 from .security import COOKIE_NAME, DUMMY_HASH, LoginLimiter, digest, hasher, verify
 
-REVISION = "0003_phase03"
+REVISION = "0004_phase04"
 DIST = Path(__file__).resolve().parents[2] / "web" / "dist"
 
 
@@ -33,7 +33,12 @@ def create_app(settings: Settings | None = None, *, static_dir: Path = DIST) -> 
     async def lifespan(app):
         stop = asyncio.Event()
         maintenance = None
+        workers = []
+        lock = None
         try:
+            if settings.scheduler_enabled:
+                from .scheduler import scheduler_lock
+                lock = scheduler_lock(settings.database_url)
             with engine.connect() as connection:
                 if connection.scalar(text("SELECT version_num FROM alembic_version")) != REVISION:
                     raise RuntimeError("Database schema is outdated; run alembic upgrade head")
@@ -50,14 +55,24 @@ def create_app(settings: Settings | None = None, *, static_dir: Path = DIST) -> 
             if settings.retention_enabled:
                 from .retention import retention_loop
                 maintenance = asyncio.create_task(retention_loop(sessions, stop, app.state))
+            if settings.scheduler_enabled:
+                from .scheduler import start_tasks
+                workers = await start_tasks(sessions, settings)
             yield
         finally:
+            for worker in workers:
+                worker.cancel()
+            if workers:
+                await asyncio.gather(*workers, return_exceptions=True)
             stop.set()
             if maintenance is not None:
                 await maintenance
             engine.dispose()
+            if lock is not None:
+                import os
+                os.close(lock)
 
-    app = FastAPI(title="MultiHost Monitor", version="1.0.0-phase03", lifespan=lifespan,
+    app = FastAPI(title="MultiHost Monitor", version="1.0.0-phase04", lifespan=lifespan,
                   docs_url=None, redoc_url=None, openapi_url=None)
     app.state.engine = engine
     app.state.sessions = sessions

@@ -12,9 +12,19 @@ class Settings(BaseSettings):
     session_hours: int = Field(default=8, ge=1, le=24)
 
     retention_enabled: bool = True
+    scheduler_enabled: bool = True
+    probe_allowed_cidrs: list[str] = Field(default_factory=list, max_length=32)
+    notification_allowed_cidrs: list[str] = Field(default_factory=list, max_length=32)
+    notification_secret_dir: str = "data/secrets"
 
     @model_validator(mode="after")
     def validate_config(self):
+        import ipaddress
+        try:
+            for cidr in self.probe_allowed_cidrs + self.notification_allowed_cidrs:
+                ipaddress.ip_network(cidr, strict=True)
+        except ValueError:
+            raise ValueError("Outbound CIDR configuration is invalid") from None
         if not self.database_url.startswith("sqlite:///"):
             raise ValueError("A file-backed SQLite database is required")
         if self.database_url.endswith(":memory:"):
