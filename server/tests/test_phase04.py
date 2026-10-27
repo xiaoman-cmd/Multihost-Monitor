@@ -470,8 +470,9 @@ def test_real_local_smtp_tls_auth_and_message_id(certificates, monkeypatch, mode
         port=service.sockets[0].getsockname()[1]
         try:
             async with asyncio.timeout(5):
-                await notifications.smtp_send({'host':'127.0.0.1','port':port,'tls_mode':mode,'from':'monitor@example.invalid','to':['ops@example.invalid'],'username':'test','password':'throwaway'}, {'state':'firing'}, 'stable-message-id', outbound.AddressPolicy(['127.0.0.1/32']))
+                await notifications.smtp_send({'host':'127.0.0.1','port':port,'tls_mode':mode,'from':'monitor@example.invalid','to':['ops@example.invalid'],'username':'test','password':'throwaway'}, {'state':'firing','rule':'本地告警'}, 'stable-message-id', outbound.AddressPolicy(['127.0.0.1/32']))
             assert len(observed)==1 and b'<stable-message-id@multihost-monitor.invalid>' in observed[0]
+            assert observed[0].isascii() and b'quoted-printable' in observed[0]
         finally:
             service.close();await service.wait_closed()
     asyncio.run(run())

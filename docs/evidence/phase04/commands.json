@@ -5,7 +5,7 @@
   "python": {
     "command": ".venv/bin/pytest -q",
     "result": "214 passed, 1 upstream deprecation warning",
-    "seconds": 82.87
+    "seconds": 90.42
   },
   "web": {
     "test_command": "npm --prefix web test",

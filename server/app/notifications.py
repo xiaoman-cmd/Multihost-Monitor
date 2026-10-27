@@ -96,7 +96,7 @@ async def smtp_send(config, payload, key, policy):
         message['To'] = ', '.join(recipients)
         message['Subject'] = 'MultiHost Monitor: ' + str(payload.get('state', 'test'))
         message['Message-ID'] = f'<{key}@multihost-monitor.invalid>'
-        message.set_content(json.dumps(payload, ensure_ascii=False))
+        message.set_content(json.dumps(payload, ensure_ascii=False), cte="quoted-printable")
         lines = message.as_bytes().replace(b'\r\n', b'\n').split(b'\n')
         writer.write(b'\r\n'.join(b'.' + line if line.startswith(b'.') else line for line in lines) + b'\r\n.\r\n')
         await writer.drain()
