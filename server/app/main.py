@@ -13,7 +13,7 @@ from .db import make_engine, session_factory
 from .models import AdminSession, AdminUser, Host, now
 from .security import COOKIE_NAME, DUMMY_HASH, LoginLimiter, digest, hasher, verify
 
-REVISION = "0001_phase01"
+REVISION = "0002_phase02"
 DIST = Path(__file__).resolve().parents[2] / "web" / "dist"
 
 
@@ -48,11 +48,14 @@ def create_app(settings: Settings | None = None, *, static_dir: Path = DIST) -> 
         finally:
             engine.dispose()
 
-    app = FastAPI(title="MultiHost Monitor", version="1.0.0-phase01", lifespan=lifespan,
+    app = FastAPI(title="MultiHost Monitor", version="1.0.0-phase02", lifespan=lifespan,
                   docs_url=None, redoc_url=None, openapi_url=None)
     app.state.engine = engine
     app.state.sessions = sessions
     app.state.settings = settings
+
+    from .agent_api import BodyLimit
+    app.add_middleware(BodyLimit)
 
     @app.middleware("http")
     async def security_headers(request, call_next):
@@ -148,6 +151,9 @@ def create_app(settings: Settings | None = None, *, static_dir: Path = DIST) -> 
             rows = db.scalars(select(Host).order_by(Host.id).limit(100)).all()
             return {"items": [{"id": h.id, "name": h.name, "hostname": h.hostname,
                                "status": h.status, "last_seen_at": h.last_seen_at} for h in rows]}
+
+    from .agent_api import install_routes
+    install_routes(app, sessions, authenticated, same_origin)
 
     @app.get("/{path:path}", include_in_schema=False)
     def frontend(path: str):

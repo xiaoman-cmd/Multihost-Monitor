@@ -1,4 +1,4 @@
-"""Phase 01 schema. All timestamps are UTC Unix seconds; secrets are never API fields."""
+"""Monitoring schema. All timestamps are UTC Unix seconds; secrets are never API fields."""
 import time
 
 from sqlalchemy import (Boolean, CheckConstraint, Float, ForeignKey, ForeignKeyConstraint,
@@ -20,6 +20,14 @@ class Host(Base):
     status: Mapped[str] = mapped_column(String(16), default="pending", server_default="pending")
     created_at: Mapped[int] = mapped_column(default=now)
     last_seen_at: Mapped[int | None]
+    cloud_provider: Mapped[str] = mapped_column(String(64), default="", server_default="")
+    region: Mapped[str] = mapped_column(String(64), default="", server_default="")
+    tags: Mapped[list] = mapped_column(JSON, default=list, server_default="[]")
+    systemd_units: Mapped[list] = mapped_column(JSON, default=list, server_default="[]")
+    metadata_at: Mapped[int | None]
+    os: Mapped[str | None] = mapped_column(String(128))
+    arch: Mapped[str | None] = mapped_column(String(32))
+    agent_version: Mapped[str | None] = mapped_column(String(64))
     __table_args__ = (
         CheckConstraint("length(trim(name)) BETWEEN 1 AND 128", name="ck_host_name"),
         CheckConstraint("length(trim(hostname)) BETWEEN 1 AND 255", name="ck_host_hostname"),
@@ -208,3 +216,22 @@ class AdminSession(Base):
     created_at: Mapped[int] = mapped_column(default=now)
     expires_at: Mapped[int] = mapped_column(index=True)
     __table_args__ = (CheckConstraint("expires_at > created_at", name="ck_session_expiry"),)
+
+
+class AgentSample(Base):
+    __tablename__ = "agent_samples"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    host_id: Mapped[int] = mapped_column(ForeignKey("hosts.id", ondelete="CASCADE"))
+    sample_id: Mapped[str] = mapped_column(String(36))
+    sampled_at: Mapped[int]
+    received_at: Mapped[int] = mapped_column(default=now)
+    content_hash: Mapped[str] = mapped_column(String(64))
+    host_metric_id: Mapped[int] = mapped_column(ForeignKey("host_metrics.id", ondelete="CASCADE"), unique=True)
+    payload: Mapped[dict] = mapped_column(JSON)
+    __table_args__ = (
+        UniqueConstraint("host_id", "sample_id", name="uq_agent_sample_id"),
+        UniqueConstraint("host_id", "sampled_at", name="uq_agent_sample_time"),
+        CheckConstraint("length(sample_id) = 36", name="ck_agent_sample_id"),
+        CheckConstraint("length(content_hash) = 64", name="ck_agent_sample_hash"),
+        CheckConstraint("sampled_at > 0 AND received_at > 0", name="ck_agent_sample_times"),
+    )

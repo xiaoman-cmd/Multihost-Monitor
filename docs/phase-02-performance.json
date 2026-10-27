@@ -1,0 +1,13 @@
+{
+  "kind": "synthetic TestClient + file SQLite WAL; no socket/TLS; not real-host acceptance",
+  "platform": "macOS-13.1-x86_64-i386-64bit",
+  "python": "3.12.13",
+  "batches": 20,
+  "samples_per_batch": 32,
+  "total_samples": 640,
+  "batch_bytes_mean": 20219,
+  "batch_ms_median": 64.68557042535394,
+  "batch_ms_p95": 66.46967609412968,
+  "total_request_seconds": 1.3456838780548424,
+  "samples_per_request_second": 475.5946106191794
+}

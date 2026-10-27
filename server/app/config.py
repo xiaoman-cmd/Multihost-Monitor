@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     @model_validator(mode="after")
     def validate_config(self):
         if not self.database_url.startswith("sqlite:///"):
-            raise ValueError("Phase 01 requires a file-backed SQLite database")
+            raise ValueError("A file-backed SQLite database is required")
         if self.database_url.endswith(":memory:"):
             raise ValueError("Use a file-backed database for WAL")
         if len(self.admin_password) < 12:

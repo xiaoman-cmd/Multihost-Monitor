@@ -1,0 +1,39 @@
+{
+  "toolchain": "go1.27.3 darwin/amd64",
+  "staticcheck": "2026.2.2 (0.8.2)",
+  "gopsutil": "v4.25.9",
+  "race_detector": {
+    "tests_passed": 19,
+    "failed": 0,
+    "platform": "darwin/amd64"
+  },
+  "vet": [
+    "darwin/amd64",
+    "linux/amd64",
+    "linux/arm64"
+  ],
+  "staticcheck_passed": true,
+  "queue_benchmark": {
+    "platform": "darwin/amd64",
+    "cpu": "Intel Core i7-9750H",
+    "ns_per_op": 488.1,
+    "bytes_per_op": 240,
+    "allocs_per_op": 1
+  },
+  "builds": [
+    {
+      "file": "agent/bin/monitor-agent-linux-amd64",
+      "bytes": 7438496,
+      "sha256": "7189ba213f87a1fe9e4fcec228ec957a6537db8f582966f67b6be1fe5f64fd80",
+      "format": "ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, Go BuildID=sjVnC6lFFsVNRZSh0BPX/7m40-8m6NO56gZeZUS1V/E8CiAyZgNRoFK9hDFyxU/sfD-hbtJ-xCCNYMD2l0p, BuildID[sha1]=500b4b7d8c947a5b2daa67839062b77c66c4f209, stripped",
+      "executed_on_linux": false
+    },
+    {
+      "file": "agent/bin/monitor-agent-linux-arm64",
+      "bytes": 6881440,
+      "sha256": "493910907ce9ab318956f1b0c4c8c3dd7dce0c988f0fae7e87320ea7115f3d8e",
+      "format": "ELF 64-bit LSB executable, ARM aarch64, version 1 (SYSV), statically linked, Go BuildID=v7u-fry0iREyKYF43FDa/js_51Bx7brEFrLpQj1bS/AmH0Pzo79065MF5s8szt/_eLgEpwMOg-uv-GgRVGb, BuildID[sha1]=6314f138358ef9ebf6280fda3ac74feb2a0eb7a6, stripped",
+      "executed_on_linux": false
+    }
+  ]
+}

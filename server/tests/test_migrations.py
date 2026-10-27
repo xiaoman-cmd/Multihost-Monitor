@@ -15,7 +15,7 @@ def test_upgrade_schema_pragmas_and_no_drift(database):
     url, cfg = database
     engine = make_engine(url)
     with engine.connect() as db:
-        assert set(inspect(db).get_table_names()) == BUSINESS_TABLES | {'alembic_version', 'admin_users', 'admin_sessions'}
+        assert set(inspect(db).get_table_names()) == BUSINESS_TABLES | {'alembic_version', 'admin_users', 'admin_sessions', 'agent_samples'}
         assert db.scalar(text('PRAGMA foreign_keys')) == 1
         assert db.scalar(text('PRAGMA busy_timeout')) == 5000
         assert db.scalar(text('PRAGMA journal_mode')) == 'wal'

@@ -10,3 +10,11 @@ data/
 *.db-wal
 node_modules/
 web/dist/
+.env.*
+!.env.example
+*.pem
+*.key
+*.token
+agent/config.json
+agent/bin/
+agent/dist/

@@ -1,0 +1,32 @@
+[Unit]
+Description=MultiHost Monitor Agent
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=multihost-agent
+Group=multihost-agent
+ExecStart=/usr/local/lib/multihost-monitor/monitor-agent -config /etc/multihost-monitor/config.json
+Restart=on-failure
+RestartSec=30s
+TimeoutStopSec=15s
+UMask=0077
+NoNewPrivileges=true
+CapabilityBoundingSet=
+AmbientCapabilities=
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+RestrictRealtime=true
+LockPersonality=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6 AF_NETLINK
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

@@ -1,6 +1,6 @@
-# MultiHost Monitor · V1.0 Phase 01
+# MultiHost Monitor · V1.0 Phase 02
 
-FastAPI + SQLAlchemy 2.0 + Alembic + SQLite WAL，React + TypeScript + Vite + Tailwind。当前提供数据库基础、安全管理员会话、健康检查和空白控制台。
+FastAPI + SQLAlchemy 2.0 + Alembic + SQLite WAL，React + TypeScript + Vite + Tailwind。在 Phase 01 基础上提供主机管理、Agent Token 认证、Go 只读采集、批量幂等上报与指标查询；保留安全管理员会话、健康检查和空白控制台。
 
 ## 快速启动
 
@@ -41,11 +41,11 @@ uv run --frozen alembic downgrade base
 ## 目录
 
 - `server/app/`：配置、ORM、SQLite 连接、安全会话、API 与静态文件服务。
-- `server/migrations/`：独立、可回滚的 Alembic 初始迁移。
+- `server/migrations/`：独立、可回滚的 Alembic 初始与增量迁移。
 - `server/tests/`：真实文件 SQLite 上的迁移、约束、认证与 API 测试。
-- `agent/`：仅预留边界，不包含 Agent 实现。
+- `agent/`：gopsutil/v4 Go Agent、有限内存队列、HTTPS 传输、双架构构建与 systemd 模板。
 - `web/`：React 应用、Tailwind 样式、组件测试、前端锁文件。
 - `deploy/`：单进程开发脚本及部署边界。
 - `docs/`：架构、模型说明与阶段验收报告。
 
-详见 [架构](docs/architecture.md) 和 [阶段报告](docs/phase-01-report.md)。
+Phase 02 详见 [Agent](agent/README.md)、[接口协议](docs/phase-02-protocol.md)、[安装与回滚](docs/phase-02-operations.md)、[阶段报告](docs/phase-02-report.md)。Phase 01 历史资料见 [架构](docs/architecture.md) 和 [报告](docs/phase-01-report.md)。真实 Linux 双机验收仍待提供测试环境。

@@ -1,0 +1,12 @@
+{
+  "server_url": "https://monitor.example.com",
+  "host_id": 1,
+  "token_file": "/etc/multihost-monitor/agent.token",
+  "ca_file": "",
+  "queue_capacity": 240,
+  "batch_size": 16,
+  "timeout_seconds": 10,
+  "mountpoints": ["/"],
+  "interfaces": [],
+  "systemd_units": ["sshd.service"]
+}

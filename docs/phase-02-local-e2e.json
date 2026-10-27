@@ -1,0 +1,17 @@
+{
+  "kind": "real macOS process -> HTTPS -> FastAPI -> SQLite; NOT Linux acceptance",
+  "platform": "macOS-13.1-x86_64-i386-64bit",
+  "first_sample": true,
+  "center_outage_seconds": 33,
+  "agent_survived_outage": true,
+  "buffer_replayed": true,
+  "restart_resumed": true,
+  "persisted_samples": 3,
+  "cpu_percent_in_range": true,
+  "memory_total_positive": true,
+  "disk_count": 1,
+  "network_count": 21,
+  "journal_mode": "wal",
+  "retry_events": 3,
+  "token_not_in_agent_log": true
+}
