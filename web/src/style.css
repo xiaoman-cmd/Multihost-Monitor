@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer base {
+  :root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+  body { @apply m-0 bg-slate-950 text-slate-100 antialiased; }
+  button { @apply min-h-11 cursor-pointer transition-colors duration-150 disabled:cursor-wait disabled:opacity-60; }
+  button:focus-visible, input:focus-visible { @apply outline outline-2 outline-offset-4 outline-emerald-300; }
+  label { @apply mb-2 block text-sm font-medium text-slate-200; }
+  input { @apply min-h-12 w-full rounded-lg border border-slate-500 bg-slate-950 px-3 py-2 text-base; }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: 0ms !important; } }
+}
+@layer components {
+  .panel { @apply rounded-2xl border border-slate-700 bg-slate-900 shadow-xl shadow-black/10; }
+  .primary { @apply min-h-12 rounded-lg bg-emerald-400 px-5 py-3 font-semibold text-slate-950 hover:bg-emerald-300; }
+  .secondary { @apply rounded-lg border border-slate-500 px-4 py-2 text-sm text-slate-200 hover:bg-slate-800; }
+  .eyebrow { @apply text-xs font-medium tracking-widest text-emerald-300; }
+}
