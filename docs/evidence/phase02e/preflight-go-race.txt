@@ -1,0 +1,52 @@
+Preflight only; darwin/amd64, not Linux acceptance.
+?   	multihost-monitor/agent/cmd/monitor-agent	[no test files]
+?   	multihost-monitor/agent/internal/model	[no test files]
+=== RUN   TestCPUSamplingAndRollback
+--- PASS: TestCPUSamplingAndRollback (0.00s)
+=== RUN   TestNetworkNewResetRemovedAndChanged
+--- PASS: TestNetworkNewResetRemovedAndChanged (0.00s)
+=== RUN   TestUnsafeServiceUnavailable
+--- PASS: TestUnsafeServiceUnavailable (0.00s)
+=== RUN   TestLocalCollectionWarmupAndInaccessibleDisk
+--- PASS: TestLocalCollectionWarmupAndInaccessibleDisk (0.17s)
+PASS
+=== RUN   TestConfigBoundaries
+--- PASS: TestConfigBoundaries (0.00s)
+=== RUN   TestPrivateToken
+--- PASS: TestPrivateToken (0.00s)
+=== RUN   TestStrictConfigJSON
+--- PASS: TestStrictConfigJSON (0.00s)
+PASS
+=== RUN   TestOverflowAndInflightAck
+--- PASS: TestOverflowAndInflightAck (0.00s)
+=== RUN   TestConcurrentQueue
+ok  	multihost-monitor/agent/internal/collector	2.063s
+--- PASS: TestConcurrentQueue (0.03s)
+PASS
+ok  	multihost-monitor/agent/internal/config	2.460s
+=== RUN   TestOfflineBufferAndRecovery
+ok  	multihost-monitor/agent/internal/queue	3.069s
+=== RUN   TestTLSBearerAndAcknowledgement
+--- PASS: TestTLSBearerAndAcknowledgement (0.04s)
+=== RUN   TestOfflineRecoveryAndStatusClassification
+--- PASS: TestOfflineRecoveryAndStatusClassification (0.02s)
+=== RUN   TestRefuseUntrustedTLS
+2026/10/27 18:25:52 http: TLS handshake error from 127.0.0.1:52356: remote error: tls: bad certificate
+--- PASS: TestRefuseUntrustedTLS (0.02s)
+=== RUN   TestNoRedirectCredentialForwarding
+--- PASS: TestNoRedirectCredentialForwarding (0.02s)
+=== RUN   TestConnectionLossCancellationAndSafeErrors
+--- PASS: TestConnectionLossCancellationAndSafeErrors (0.00s)
+=== RUN   TestInvalidAcknowledgementRetried
+--- PASS: TestInvalidAcknowledgementRetried (0.02s)
+PASS
+--- PASS: TestOfflineBufferAndRecovery (1.63s)
+=== RUN   TestPoisonBatchIsolation
+--- PASS: TestPoisonBatchIsolation (0.00s)
+=== RUN   TestAuthenticationStopsAndJoinsCollector
+--- PASS: TestAuthenticationStopsAndJoinsCollector (0.00s)
+=== RUN   TestBackoffBounds
+--- PASS: TestBackoffBounds (0.00s)
+PASS
+ok  	multihost-monitor/agent/internal/transport	4.305s
+ok  	multihost-monitor/agent/internal/runtime	5.250s

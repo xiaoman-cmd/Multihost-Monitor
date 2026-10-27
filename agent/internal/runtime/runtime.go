@@ -83,6 +83,7 @@ func (r *Runtime) collect(ctx context.Context) {
 		r.mu.RLock()
 		units := append([]string(nil), r.units...)
 		r.mu.RUnlock()
+		collectionStarted := time.Now()
 		collectCtx, cancel := context.WithTimeout(ctx, 10*time.Second)
 		sample, err := r.Collector.Collect(collectCtx, units)
 		cancel()
@@ -93,7 +94,8 @@ func (r *Runtime) collect(ctx context.Context) {
 			r.latest = &copy
 			r.mu.Unlock()
 			size, dropped := r.Queue.Stats()
-			r.Logger.Info("sample_collected", "queued", size, "dropped_total", dropped)
+			r.Logger.Info("sample_collected", "queued", size, "dropped_total", dropped,
+				"duration_ms", time.Since(collectionStarted).Milliseconds())
 		} else if !errors.Is(err, collector.ErrWarmup) && ctx.Err() == nil {
 			r.Logger.Warn("collection_unavailable")
 		}
@@ -132,6 +134,7 @@ func (r *Runtime) send(ctx context.Context) error {
 		batch := r.Queue.Peek(batchSize)
 		var err error
 		if len(batch) > 0 {
+			uploadStarted := time.Now()
 			err = r.Sender.Metrics(ctx, batch)
 			if err == nil {
 				ids := make([]string, len(batch))
@@ -141,7 +144,9 @@ func (r *Runtime) send(ctx context.Context) error {
 				r.Queue.Ack(ids)
 				attempt = 0
 				single = false
-				r.Logger.Info("batch_accepted", "samples", len(batch))
+				queued, dropped := r.Queue.Stats()
+				r.Logger.Info("batch_accepted", "samples", len(batch), "queued", queued,
+					"dropped_total", dropped, "duration_ms", time.Since(uploadStarted).Milliseconds())
 			} else if transport.Authentication(err) {
 				return errors.New("agent authentication rejected")
 			} else if !transport.Retryable(err) {
