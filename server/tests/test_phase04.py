@@ -664,3 +664,13 @@ def test_migration_refuses_legacy_plaintext_channel_before_ddl(database):
         assert db.scalar(text('SELECT version_num FROM alembic_version'))=='0003_phase03'
         assert 'next_run_at' not in {row[1] for row in db.execute(text('PRAGMA table_info(service_checks)'))}
     engine.dispose()
+
+
+@pytest.mark.parametrize('value',['NaN','Infinity','-Infinity'])
+def test_nonfinite_monitoring_requests_are_422_without_echo(client,login,value):
+    headers={'Origin':'http://127.0.0.1:8000','X-CSRF-Token':login['csrf_token'],'Content-Type':'application/json'}
+    body='{"name":"bad","metric":"cpu_percent","threshold":'+value+',"recovery_threshold":60}'
+    response=client.post('/api/v1/alert-rules',content=body,headers=headers)
+    assert response.status_code==422 and value not in response.text
+    response=client.post('/api/v1/notification-channels',json={'password':'DO-NOT-ECHO-TEST-SECRET'},headers=headers)
+    assert response.status_code==422 and 'DO-NOT-ECHO-TEST-SECRET' not in response.text

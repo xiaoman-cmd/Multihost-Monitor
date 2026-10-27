@@ -3,6 +3,8 @@ import re
 from typing import Literal
 
 from fastapi import Depends, HTTPException, Query
+from fastapi.exception_handlers import request_validation_exception_handler
+from fastapi.exceptions import RequestValidationError
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 from sqlalchemy import func, select
 from sqlalchemy.exc import IntegrityError
@@ -100,6 +102,14 @@ RESULT_FIELDS = ['id', 'check_id', 'host_id', 'checked_at', 'status', 'latency_m
 
 
 def install_monitoring_routes(app, sessions, authenticated, admin_write, write):
+    @app.exception_handler(RequestValidationError)
+    async def validation(request, error):
+        roots = ('checks', 'alert-rules', 'alerts', 'alert-events', 'notification-channels', 'notification-deliveries')
+        if any(request.url.path == '/api/v1/' + root or request.url.path.startswith('/api/v1/' + root + '/') for root in roots):
+            # Never echo rejected secret fields or serialize non-finite raw inputs.
+            return JSONResponse({'detail': 'Invalid monitoring fields or query limits'}, status_code=422)
+        return await request_validation_exception_handler(request, error)
+
     @app.exception_handler(IntegrityError)
     async def conflict(request, error):
         return JSONResponse({'detail': 'Configuration conflicts with an existing record'}, status_code=409)

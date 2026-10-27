@@ -1,0 +1,14 @@
+npm WARN logfile could not be created: Error: EPERM: operation not permitted, open '/Users/phoenix/.npm/_logs/2026-10-27T12_27_16_547Z-debug-0.log'
+
+> multihost-monitor-web@1.0.0 build
+> tsc --noEmit && vite build
+
+vite v5.4.21 building for production...
+transforming...
+✓ 40 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.41 kB │ gzip:  0.29 kB
+dist/assets/index-Blz7vAb5.css   27.60 kB │ gzip:  6.75 kB
+dist/assets/index-DqrB5_1y.js   197.32 kB │ gzip: 64.87 kB
+✓ built in 6.05s

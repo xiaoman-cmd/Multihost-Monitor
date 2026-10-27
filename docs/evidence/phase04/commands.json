@@ -1,0 +1,44 @@
+{
+  "timezone": "Asia/Shanghai",
+  "date": "2026-10-27",
+  "baseline": "d9229319d553d0a9798116f31315b9f769aad66c",
+  "python": {
+    "command": ".venv/bin/pytest -q",
+    "result": "214 passed, 1 upstream deprecation warning",
+    "seconds": 82.87
+  },
+  "web": {
+    "test_command": "npm --prefix web test",
+    "result": "18 passed in 4 files",
+    "seconds": 19.84,
+    "build_command": "npm --prefix web run build",
+    "build_seconds": 6.05,
+    "typescript": "passed"
+  },
+  "go": {
+    "cwd": "agent",
+    "toolchain": "/private/tmp/mhm-toolchain/go/bin/go",
+    "commands": [
+      "go test -race -count=1 ./...",
+      "go vet ./...",
+      "/private/tmp/mhm-tools/staticcheck ./..."
+    ],
+    "test_result": "19 top-level tests, all packages passed; native system reads and loopback listeners permitted"
+  },
+  "performance": {
+    "command": "PYTHONPATH=server .venv/bin/python server/tools/benchmark_phase04.py",
+    "note": "temporary isolated SQLite, measured alongside local regression activity; no network"
+  },
+  "browser": {
+    "command": "PYTHONPATH=server .venv/bin/python server/tools/preview_phase04.py",
+    "note": "two temporary runs, second used for evidence; local endpoint only; both stopped and directories deleted"
+  },
+  "schema": {
+    "commands": [
+      "alembic upgrade 0003_phase03",
+      "alembic upgrade head",
+      "alembic check"
+    ],
+    "note": "programmatic Alembic API in TemporaryDirectory; no formal database touched"
+  }
+}
