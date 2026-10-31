@@ -18,5 +18,6 @@ web/dist/
 agent/config.json
 agent/bin/
 agent/dist/
+deploy/phase05/dist/
 secrets/
 *.scheduler.lock

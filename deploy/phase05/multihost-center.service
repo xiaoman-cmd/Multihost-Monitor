@@ -1,0 +1,35 @@
+[Unit]
+Description=MultiHost Monitor center
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=multihost-center
+Group=multihost-center
+EnvironmentFile=/etc/multihost-monitor/server.env
+WorkingDirectory=/opt/multihost-monitor/current
+ExecStart=/opt/multihost-monitor/current/.venv/bin/uvicorn app.main:create_app --factory --app-dir server --host 127.0.0.1 --port 18080 --workers 1 --no-proxy-headers
+Restart=on-failure
+RestartSec=15s
+TimeoutStopSec=30s
+UMask=0077
+NoNewPrivileges=true
+CapabilityBoundingSet=
+AmbientCapabilities=
+ProtectSystem=strict
+ReadWritePaths=/var/lib/multihost-monitor
+ProtectHome=true
+PrivateTmp=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+RestrictRealtime=true
+LockPersonality=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
